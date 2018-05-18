@@ -1,0 +1,26 @@
+/*
+ * GridFilters Styles
+ */
+
+.ux-filtered-column {
+    /* font-style: italic; */
+    font-weight: bold;
+    
+    /* 2013.10.31 Lee Sukmin - Start */
+    border-left:  1px solid #C7E3B4;
+    border-right: 1px solid #C7E3B4;
+    /* 2013.10.31 Lee Sukmin - End */
+}
+
+.ux-gridfilter-text-icon {
+    background-image: url(../images/find.png) !important;
+}
+
+   /* 2013.10.31 Lee Sukmin - Start */
+.ux-filtered-column .x-column-header-trigger {
+	background-image: url(../images/hd-btn.gif);
+}
+.ux-filtered-column .x-column-header-inner {
+	background-image: url(../images/header_bg.gif);
+}
+/* 2013.10.31 Lee Sukmin - End */

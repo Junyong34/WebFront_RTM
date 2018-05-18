@@ -1,0 +1,163 @@
+body {
+    scrollbar-face-color: #FFFFFF;
+    scrollbar-shadow-color: #cdcdcd;
+    scrollbar-highlight-color: #cdcdcd;
+    scrollbar-3dlight-color: #FFFFFF;
+    scrollbar-darkshadow-color: #FFFFFF;
+    scrollbar-track-color: #FFFFFF;
+    scrollbar-arrow-color: #cdcdcd;
+}
+
+
+/* Icon image */
+
+.connect {
+    background-image: url(/admin/css/img/connect.png) !important;
+}
+
+.disconnect {
+    background-image: url(/admin/css/img/disconnect.png) !important;
+}
+
+.play {
+    background-image: url(/admin/css/img/connect.png) !important;
+}
+
+.pause {
+    background-image: url(/admin/css/img/disconnect.png) !important;
+}
+
+.accept {
+    background-image: url(/admin/css/img/accept.png) !important;
+}
+
+.delete {
+    background-image: url(/admin/css/img/delete.png) !important;
+}
+
+.batchapply {
+    background-image: url(/admin/css/img/batchapply.png) !important;
+}
+
+.error {
+    background-image: url(/admin/css/img/error.png) !important;
+}
+
+.refresh {
+    background-image: url(/admin/css/img/refresh.png) !important;
+}
+
+.add {
+    background-image: url(/admin/css/img/add.png) !important;
+}
+
+.modify {
+    background-image: url(/admin/css/img/cog_edit.png) !important;
+}
+
+.excel {
+    background-image: url(/admin/css/img/excel.png) !important;
+}
+
+.checkbox_checked {
+    background-image: url(/admin/css/img/checkbox_checked.png) !important;
+}
+
+.checkbox_unchecked {
+    background-image: url(/admin/css/img/checkbox_unchecked.png) !important;
+}
+
+.filter {
+    background-image: url(/admin/css/img/filter.png) !important;
+}
+
+.page_layout {
+    background-image: url(/admin/css/img/page_layout.png) !important;
+}
+
+.nav {
+    background-image: url(/admin/css/img/folder_go.png) !important;
+}
+
+.info {
+    background-image: url(/admin/css/img/information.png) !important;
+}
+
+.settings {
+    background-image: url(/admin/css/img/folder_wrench.png) !important;
+}
+
+.label-arrow_right16 {
+    background-image: url(/admin/css/img/arrow_right16.png ) !important;
+}
+
+.multiline .x-grid-cell-inner {
+    white-space: normal;
+    text-overflow: initial;
+    word-break: break-all;
+}
+
+
+/* Custom Grid Row */
+
+.custom-row .x-grid-cell {
+    background-color: #ffe2e2;
+    color: #900;
+}
+
+
+/* Custom Grid Cell */
+
+.custom-normal-cell {
+    color: #459F46;
+}
+
+.custom-warning-cell {
+    color: #AA8415;
+}
+
+.custom-critical-cell {
+    color: #CB1B1F;
+}
+
+.custom-normal-img-cell {
+    background: url(/admin/css/img/accept.png) no-repeat;
+    background-position: center center;
+}
+
+.custom-warning-img-cell {
+    background: url(/admin/css/img/error.png) no-repeat;
+    background-position: center center;
+}
+
+.custom-critical-img-cell {
+    background: url(/admin/css/img/delete.gif) no-repeat;
+    background-position: center center;
+}
+
+
+/* Custom Form */
+
+.custom-form-label {
+    color: #454545;
+    font-weight: bold;
+}
+
+.custom-form-field {
+    color: #454545;
+}
+
+
+/* Custom Grid Column */
+
+.x-grid-row .custom-column-read {
+    color: #009;
+}
+
+.admin-new-row .x-grid-cell {
+    background-color: #D8EAD7 !important;
+}
+
+.logPanelWrap {
+    white-space: nowrap;
+}

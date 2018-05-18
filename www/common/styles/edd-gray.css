@@ -1,0 +1,32 @@
+.panel_gray .x-header{
+    background-color: blue;
+}
+.panel_gray .ok{
+    background-color: green;
+}
+
+.panel_gray .x-header{
+    background-color: yellow;
+}
+.panel_gray .cancel{
+    background-color: red;
+}
+.edd-container-gray {
+    background-color: #212227 !important;
+    border-color: #474a53;
+}
+/* flot chart 레전드 스타일 변경 */
+.legend-container {
+	/*background-color: #fff;*/
+	/*padding: 2px;*/
+	margin-bottom: 8px;
+	border-radius: 3px 3px 3px 3px;
+	/*border: 1px solid #E6E6E6;*/
+	display: inline-block;
+	position: absolute;
+	/*top: -12px;*/
+	/*left: 165px;*/
+}
+.legendLabel {
+	color: #ABAEB5;
+}
