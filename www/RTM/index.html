@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>EDD</title>
+    <!--<link rel="shortcut icon" href="../images/favicon.ico">-->
+    <link rel="stylesheet" type="text/css" href="../common/extjs/packages/ext-theme-gray/build/resources/ext-theme-gray-all.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="../styles/codemirror.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../styles/merge.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../styles/txndetail.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../styles/WasSelectForm.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../styles/d3Scatter.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../styles/dock.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../styles/dock_black.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../styles/dock_gray.css"/>-->
+
+    <!--<link rel="stylesheet" type="text/css" href="../styles/realtime.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../styles/toggle-slide.css"/>-->
+
+
+    <style>
+        .trend-waslist-ul {
+            padding: 10px;
+        }
+
+        .trend-waslist-li {
+            margin-bottom: 5px;
+            padding: 3px;
+            cursor: pointer;
+        }
+
+        .trend-waslist-li.selected {
+            color: white;
+        }
+    </style>
+    <!--<link rel="stylesheet" type="text/css" href="../styles/mainMenu.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../RTM/styles/rtmTheme_v1.css"/>-->
+    <link rel="stylesheet" type="text/css" href="../RTM/styles/rtmTheme_gray_v1.css"/>
+    <link rel="stylesheet" type="text/css" href="../common/styles/edd-gray.css"/>
+
+    <style>
+        html {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background-color: #393c43;
+            font-family: 'Droid Sans';
+            font-size: 9pt;
+        }
+
+
+
+        #homediv {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #3e3e3e;
+        }
+
+    </style>
+
+</head>
+<body class="main-tab mx-theme-gray">
+<div id='homediv'></div>
+<!--<img id='initImg' src='../images/loginLeft_bg.png'/>-->
+
+<!--<script type="text/javascript" src="../common/extjs/build/ext-all-debug-5.1.1.js"></script>-->
+<script type="text/javascript" src="../common/extjs/build/ext-all.js"></script>
+<script type="text/javascript" src="../common/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../common/LAB.min.js"></script>
+<!--<script type="text/javascript" src="loadScript.js"></script>-->
+
+
+
+
+<div class="rtm-activitygroup-base" style="display:none" id="hiddendiv"></div>
+</body>
+
+<script>
+
+    var _is_scriptload2 = false;
+    _dynamicLoadCount = 0 ;
+    ScriptPool = [];
+    headID  = null;
+    ScriptPool_idx = 0;
+
+    function app_launch() {
+        EED.app.launch_afterInit();
+    }
+
+    for (var i = 0, t = null; i < 400; i++) {
+        /* 동적 로딩 pool 인데 , 400개 잡아놈. 현재 260개정도됨. */
+        t = document.createElement('script');
+        t.type = 'text/javascript';
+        ScriptPool.push( t);
+        t = null;
+    }
+    function loadScript2( AFilename, callBack ) {
+//        console.log(AFilename);
+        _dynamicLoadCount ++;
+
+        if (!headID )
+            headID = document.getElementsByTagName("head")[0];
+
+
+        var scriptEl = ScriptPool[ScriptPool_idx];
+        ScriptPool_idx ++;
+        /*pool 재활용이 될지 안될진 모르겠으나.. 그래도 해둠.*/
+        if ( ScriptPool_idx > ScriptPool.length-1 ) {
+            ScriptPool_idx = 0;
+        }
+
+        scriptEl.onload = function()
+        {
+            console.log(AFilename, _dynamicLoadCount);
+            _dynamicLoadCount-- ;
+            if(callBack) callBack() ;
+            this.onload = null;
+        } ;
+        scriptEl.src= AFilename;
+        headID.appendChild(scriptEl);
+
+    }
+    window.addEventListener("load", function () {
+        scriptload2();
+        setTimeout(function () {
+             app_launch();
+         }, 1000);
+    });
+
+    function scriptload2()
+    {
+        if (_is_scriptload2) return;
+        _is_scriptload2 = true;
+        _dynamicLoadCount++;
+
+        $LAB
+//            .script("../common/extjs/build/ext-all.js").wait()
+            .script("app.js")
+            .script("../common/globalVariable.js")
+            .script("./EED/rtmOsCpuMonitor.js")
+            .script("./EED/chart/canvasArc.js")
+//            .script("../common/locale/exem-lang-ko.js")
+//            .script("../common/extjs/src/ux/BoxReorderer.js")
+//            .script("../common/extjs/src/ux/ToolbarDroppable.js")
+//            .script("../common/Exem/Container.js")
+//            .script("../common/Exem/TabPanel.js")
+//            .script("../common/Exem/DockForm.js")
+
+
+//
+//
+//            .script("../common/Exem/ContextMenu.js")
+//            .script("../common/Exem/LoadingMask.js")
+//            .script("../common/util.js")
+//            .script("./src/rtmActiveTxn.js")
+            .script("boot.js")
+//            .wait()
+//            .script("../common/Exem/baseGrid.js")
+//            .wait()
+//            .script("./src/rtmCommon.js")
+//            .wait()
+//            .script("./src/eedActiveTxnList.js")
+//            .wait()
+//            .script("../common/DataModule.js");
+    }
+
+
+</script>
+</html>

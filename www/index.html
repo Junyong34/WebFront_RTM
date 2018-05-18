@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="shortcut icon" href="/assets/favicon.ico">
+	<title>InterMax</title>
+	<link rel="stylesheet" href="/css/normalize.min.css">
+	<link rel="stylesheet" href="/login/login.css">
+</head>
+
+<body>
+	<div class="login">
+		<form class="login_form">
+			<div class="login_form_logo"></div>
+			<input style="opacity: 0;position: absolute;">
+			<input type="password" style="opacity: 0;position: absolute;">
+
+			<div class="login_form_user-id">
+				<input id="user-id" class="login_form_user-id_input" type="text" name="user-id" aria-placeholder="user id" tabindex="1" required
+				 autocomplete="false">
+			</div>
+			<div class="login_form_passwd">
+				<input id="passwd" class="login_form_passwd_input" type="password" name="passwd" aria-placeholder="password" tabindex="2"
+				 required autocomplete="false">
+			</div>
+			<input type="submit" class="login_form_submit" value="Login" tabindex="3">
+			<br>
+			<label for="user-id-cached">
+				<input type="checkbox" id="user-id-cached" class="login_form_user-id_cache" tabindex="4"> Remember me
+			</label>
+		</form>
+	</div>
+
+	<script src="./lib/jquery.min.js"></script>
+	<script src="./login/login.js"></script>
+</body>
+
+</html>

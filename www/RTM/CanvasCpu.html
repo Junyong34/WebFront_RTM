@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>InterMax</title>
+    <style>
+
+        @font-face {
+            font-family: 'Droid Sans';
+            src: local('Droid Sans'), url('../styles/fonts/DroidSans.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Meiryo UI';
+            src: local('Meiryo UI'), url('../styles/fonts/MeiryoUI.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* animate the drops*/
+        html,body,div,span,h1,h2,h3,h4,h5,h6,p,a,img,small,strong,dl,dt,dd,ol,ul,li,label,table,tbody,tfoot,thead,tr,th,td,canvas,footer,audio {
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            box-sizing: border-box;
+            font-family: 'Droid Sans', NanumGothic;
+        }
+        html {
+            text-rendering: optimizeLegibility;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+            -ms-overflow-x: hidden;
+        }
+
+        body{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #f5fafd;
+            min-height: 800px;
+            min-width: 1280px;
+            overflow: auto;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="main" class="main-loading">
+    로그인 페이지
+    <button id="idBtn_ok" class="login-field-btn" tabindex="3"> 로그인 </button>
+</div>
+<br>
+<br><br><br>
+<br>
+<canvas id="cpuChart" width="120" height="150"/>
+<canvas id="cpuChart2" width="120" height="150"/>
+
+
+<script type="text/javascript" src="../common/jquery-3.3.1.js"></script>
+
+
+</body>
+<script>
+    $(document).ready(function(){
+       // CPU Canvas
+        var cpuCanvas = document.getElementById("cpuChart");
+        var ctxBack = cpuCanvas.getContext('2d');
+
+        ctxBack.strokeStyle = this.backgroundColor;
+        ctxBack.beginPath();
+        ctxBack.lineWidth = 15;
+        ctxBack.arc(120/2, 120/2, 50, Math.PI*2, false);
+        ctxBack.stroke();
+
+        ctxBack.font = '12px Roboto Condensed';
+
+        var titleWidth = ctxBack.measureText(this.title).width;
+        ctxBack.fillStyle = this.fontColor;
+        ctxBack.fillText('cpu', 120/2 - titleWidth/2, 48);
+        ctxBack.font = '10px Helvetica';
+        ctxBack.fillStyle = this.fontColor;
+        ctxBack.fillText('%', 120/2 + 15, 48 + 28);
+
+
+
+        var cpuCanvas2 = document.getElementById("cpuChart2");
+        cpuCanvas2.style.position = 'absolute';
+        var ctx2 = cpuCanvas.getContext('2d');
+        ctx2.translate(0.5,0.5);
+
+    });
+    $(document).on("click", '#idBtn_ok', function () {
+        //로그인 처리 로직 들어가야함
+       location.href = './view.html'
+    });
+</script>
+</html>
