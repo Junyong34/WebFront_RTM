@@ -71,8 +71,8 @@
 <div id='homediv'></div>
 <!--<img id='initImg' src='../images/loginLeft_bg.png'/>-->
 
-<!--<script type="text/javascript" src="../common/extjs/build/ext-all-debug-5.1.1.js"></script>-->
-<script type="text/javascript" src="../common/extjs/build/ext-all.js"></script>
+<script type="text/javascript" src="../common/extjs/build/ext-all-debug.js"></script>
+<!--<script type="text/javascript" src="../common/extjs/build/ext-all.js"></script>-->
 <script type="text/javascript" src="../lib/jquery-3.3.1.js"></script>
 <script type="text/javascript" src="../lib/jquery-ui.js"></script>
 <script type="text/javascript" src="../lib/LAB.min.js"></script>
@@ -137,8 +137,8 @@
     window.addEventListener("load", function () {
         scriptload2();
         setTimeout(function () {
-             app_launch();
-         }, 1000);
+            app_launch();
+        }, 1000);
     });
 
     function scriptload2()
@@ -147,39 +147,40 @@
         _is_scriptload2 = true;
         _dynamicLoadCount++;
 
-		$LAB
-			//lib
-			.script("../lib/pako_inflate.min.js")
-			.script("../js/utils/zip.js")
-			.script("../js/utils/ajax.js")
-			.script("../js/utils/local.js")
-//            .script("../common/extjs/build/ext-all.js").wait()
+        $LAB
+        //lib
+            .script("/lib/pako_inflate.min.js")
+            .script("/js/utils/zip.js")
+            .script("/js/utils/ajax.js")
+            .script("/js/utils/local.js")
+            //            .script("../common/extjs/build/ext-all.js").wait()
             .script("app.js")
             .script("../common/globalVariable.js")
             .script("./EED/chart/EEDCanvas.js")
-			.script("./EED/chart/DomainChart.js")
-			.script("./EED/chart/cpuLineChart.js")
-//			.script("./EED/chart/EEDStackChart.js")
-			.script("./EED/chart/canvasCpuChart.js")
-			.script("./EED/chart/rtmTrackStackChart.js")
-            .script("./EED/rtmCpuMonitor.js")
-//			.script("./EED/rtmTaskTopLineChart.js")
-			.script("./EED/rtmDomain.js")
-			.script("./EED/rtmTrackStack.js")
-//            .script("../common/locale/exem-lang-ko.js")
-//            .script("../common/extjs/src/ux/BoxReorderer.js")
-//            .script("../common/extjs/src/ux/ToolbarDroppable.js")
-//            .script("../common/Exem/Container.js")
-//            .script("../common/Exem/TabPanel.js")
-//            .script("../common/Exem/DockForm.js")
+            .script("./EED/chart/EEDSummary.js")
+            .script("./EED/chart/DomainChart.js")
+            .script("./EED/chart/cpuLineChart.js")
+            //			.script("./EED/chart/EEDStackChart.js")
+            .script("./EED/chart/canvasCpuChart.js")
+            .script("./EED/chart/rtmTrackStackChart.js")
+//            .script("./EED/rtmTrackTaskSummary.js")
+//            .script("./EED/rtmCpuMonitor.js")
+//            .script("./EED/rtmDomain.js")
+//            .script("./EED/rtmTrackStack.js")
+            //            .script("../common/locale/exem-lang-ko.js")
+            //            .script("../common/extjs/src/ux/BoxReorderer.js")
+            //            .script("../common/extjs/src/ux/ToolbarDroppable.js")
+            //            .script("../common/Exem/Container.js")
+            //            .script("../common/Exem/TabPanel.js")
+            //            .script("../common/Exem/DockForm.js")
 
 
-//
-//
-//            .script("../common/Exem/ContextMenu.js")
-//            .script("../common/Exem/LoadingMask.js")
-//            .script("../common/util.js")
-//            .script("./src/rtmActiveTxn.js")
+            //
+            //
+            //            .script("../common/Exem/ContextMenu.js")
+            //            .script("../common/Exem/LoadingMask.js")
+            //            .script("../common/util.js")
+            //            .script("./src/rtmActiveTxn.js")
             .script("boot.js")
 //            .wait()
 //            .script("../common/Exem/baseGrid.js")

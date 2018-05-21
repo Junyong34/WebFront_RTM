@@ -7,11 +7,6 @@ Ext.define('RTM.EED.rtmTaskTop', {
     interval: 3000,
     cls: 'TaskTpsLineChart',
     listeners: {
-        destroy: function (_this) {
-            if (_this.timer) {
-                clearTimeout(_this.timer);
-            }
-        }
     },
     init: function () {
         this.chartArea = Ext.create('Ext.container.Container', {

@@ -40,9 +40,9 @@ $(window).load(function () {
       document.querySelector('.login_form_user-id_input').value = value;
       document.querySelector('.login_form_user-id_cache').checked = true;
 
-      $('.login_form_user-id_input').focus();
-    } else {
       $('.login_form_passwd_input').focus();
+    } else {
+    $('.login_form_user-id_input').focus();
     }
   }
 

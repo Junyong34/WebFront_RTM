@@ -3294,7 +3294,7 @@ Ext.define('Exem.BaseGrid', {
             });
         }
 
-        common.WebEnv.Save(gridNames, JSON.stringify(tempData));
+        // common.WebEnv.Save(gridNames, JSON.stringify(tempData));
 
         gridColumns = null;
         tempData    = null;

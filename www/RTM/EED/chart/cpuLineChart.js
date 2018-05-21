@@ -14,7 +14,7 @@ Ext.define('RTM.EED.chart.cpuLineChart', {
         this.totalPoints = 20;
         this.updateInterval = 3000;
         this.now = new Date().getTime();
-        console.log(this.now);
+        // console.log(this.now);
         this.data = [];
         this.data2 = [];
         this.data3 = [];

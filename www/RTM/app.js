@@ -47,6 +47,9 @@ Ext.application({
         })();
     },
     rtmViewObject: function () {
+        this.rtmSummary = Ext.create("RTM.EED.rtmTrackTaskSummary");
+        this.rtmSummary.init();
+
         this.trackStackChart = Ext.create("RTM.EED.rtmTrackStack");
         this.trackStackChart.init();
 
@@ -60,11 +63,16 @@ Ext.application({
         // this.wasCpuChart.init();
         this.dbCpuChart = Ext.create('RTM.EED.rtmCpuMonitor', {
             monitorType: 'db',
-        });
+        })
+
         this.chiefTaskTopLineChart = Ext.create('RTM.EED.rtmTaskTop');
         this.chiefTaskTopLineChart.init();
+
         this.domainChart = Ext.create("RTM.EED.rtmDomain");
         this.domainChart.init();
+
+        this.alarmList = Ext.create("RTM.EED.rtmAlarmList");
+        this.alarmList.init();
     },
     /**
      * 화면 메인 부분에 보여지는 기본 레이아웃 구성
@@ -107,8 +115,9 @@ Ext.application({
                                     xtype: 'panel',
                                     // title:'',
                                     height: 50,
-                                    // flex:1,
+                                    //flex:1,
                                     cls: 'panel_gray',
+                                    items: [this.rtmSummary]
                                 },
                                 {
                                     xtype: 'splitter',
@@ -220,8 +229,9 @@ Ext.application({
                                         }, {
                                             xtype: 'panel',
                                             title: '실시간 이벤트 알람 목록',
-                                            // layout: 'vbox',
+                                            layout: 'fit',
                                             flex: 1,
+                                            items: [this.alarmList]
                                         }
                                     ]
                                 },

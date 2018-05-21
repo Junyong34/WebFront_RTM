@@ -29,7 +29,7 @@ window.common.Util = {
         TPS_CHART_GUIDE       : "#5D5D5D"
     },
 
-    printErr: function (errorStr, callee) {
+    printErr: function(errorStr, callee) {
         console.debug('%c' + '[Error] ' + errorStr, 'color:Red;');
         console.debug('Caller :', arguments.callee.caller);
         console.debug('callee :', callee);
@@ -41,8 +41,9 @@ window.common.Util = {
      * radianRate - 각도 세타
      * radius - 반지름
      */
-    getPosXOnCircle: function (x, radianRate, radius) {
-        return x + (Math.cos((Math.PI * 2) * radianRate) * radius);
+    getPosXOnCircle: function(x, radianRate, radius) {
+        // return x + (Math.cos((Math.PI * 2) * radianRate) * radius);
+        return x + Math.cos((Math.PI * radianRate)) * radius;
     },
 
     /**
@@ -51,15 +52,16 @@ window.common.Util = {
      * radianRate - 각도 세타
      * radius - 반지름
      */
-    getPosYOnCircle: function (y, radianRate, radius) {
-        return y + (Math.sin((Math.PI * 2) * radianRate) * radius);
+    getPosYOnCircle: function(y, radianRate, radius) {
+        // return y + (Math.sin((Math.PI * 2) * radianRate) * radius);
+        return y + Math.sin((Math.PI * radianRate)) * radius;
     },
 
-    getTextWidth: function (text, ctx) {
+    getTextWidth: function(text, ctx) {
         return ctx.measureText(text).width;
     },
 
-    getMax: function (a, b) {
+    getMax: function(a, b) {
         return a > b ? a : b;
     },
 
@@ -68,7 +70,7 @@ window.common.Util = {
      * color - color 값. # 유무 상관 없음, rgb 값 3자리로 들어온 값도 처리 가능. 예) "#fff" -> "ffffff"
      * alpha - opacity
      */
-    getRGBA: function (color, alpha) {
+    getRGBA: function(color, alpha) {
         if (color[0] === '#') {
             color = color.substring(1);
         }
@@ -105,7 +107,10 @@ window.common.Util = {
         return 'rgba(' + R.toString(10) + ',' + G.toString(10) + ',' + B.toString(10) + ',' + A + ')';
     },
 
-    getColor: function (text, alpha) {
+    /**
+     * COLOR에 등록된 값의 key 값을 text 파라미터로 넘기고, 원하는 투명도를 같이 넘기면 투명도가 적용되서 해당하는 색이 반환된다
+     */
+    getColor: function(text, alpha) {
         var color;
 
         if (!text || !text.length) {
@@ -125,11 +130,11 @@ window.common.Util = {
         }
     },
 
-    getFontSize: function (v) {
+    getFontSize: function(v) {
         return v + 'px Droid Sans, NanumGothic';
     },
 
-    getCommaFormat: function (v) {
+    getCommaFormat: function(v) {
         if (isNaN(v) || typeof v === "object") {
             v = 0;
         }
@@ -139,14 +144,13 @@ window.common.Util = {
         return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
 
-    TR: function (v) {
+    TR: function(v) {
         return v;
     },
     /***
-     *
-     * @param data
-     * @param orderBy  asc , desc
-     * @returns {data}
+     * 정렬 메소드.
+     * 반드시 배열로 넘겨야하고, 값이 2개 이상일 때부터 적용 된다.
+     * 정렬(orderBy)를 "desc"라고 정확하게 넘기지 않는 모든 경우에 대해서 "asc"로 적용된다.
      */
     sort: function(data, orderBy) {
         if (!Array.isArray(data)) {

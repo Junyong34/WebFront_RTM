@@ -4,7 +4,7 @@ Ext.define('RTM.EED.rtmDomain', {
     layout: 'fit',
     width: '100%',
     height: '100%',
-    interval: 500,
+    interval: 1000 * 3,
     cls: 'rtmDomain',
     listeners: {
         destroy: function (_this) {
@@ -29,22 +29,23 @@ Ext.define('RTM.EED.rtmDomain', {
                         // this.chart.draw(this.chart.id, this.clientWidth, this.clientHeight, true);
                     }
                 }.bind(this),
-                render: function (_this) {
+                afterrender: function (_this) {
                     // this.chart = Ext.create('RTM.EED.rtmDomainChart', {
                     //     layout: 'fit',
                     //     width: 1250,
                     //     height: 590,
                     //     target: _this
                     // });
-                    this.chart = new DomainChart({
-                        width: 1250,
-                        height: 590,
-                        id: _this.id,
-                        tasks: ["입금내역", "출금내역", "송금내역", "계좌이체", "잔액조회", "계좌변경", "거래조회", "도메인", "뱅킹", "통장정리", "신한은행", "신고", "나가기", "종료"]
-                    });
+                    // this.chart = new DomainChart({
+                    //     width: 1250,
+                    //     height: 590,
+                    //     id: _this.id,
+                    //     tasks: ["입금내역", "출금내역", "송금내역", "계좌이체", "잔액조회", "계좌변경", "거래조회", "도메인", "뱅킹", "통장정리", "신한은행", "신고", "나가기", "종료"]
+                    // });
 
                     // this.chart.init(this.chart.id, this.chart.width, this.chart.height);
-                    this.drawFrame();
+                    // this.chart.draw();
+                    // this.drawFrame();
                 }.bind(this)
             }
         });
@@ -82,7 +83,8 @@ Ext.define('RTM.EED.rtmDomain', {
         };
 
         //TODO - 임시
-        this.chart.draw(data);
+        this.chart.drawPacketData(data);
+        this.chart.startAnimation();
 
         this.timer = setTimeout(this.drawFrame.bind(this), this.interval);
     },

@@ -69,3 +69,8 @@ form {
     color: red;
     padding-left: 9px;
 }
+
+.login_form_hidden_input {
+	position: absolute;
+	left: -9999px;
+}
