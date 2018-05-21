@@ -16,9 +16,9 @@ var ADMIN_STORE = {};
 Ext.onReady(function () {
     var common = window.common;
 
-    function sessionChecker (res) {
+    function sessionChecker (session) {
         // session check
-        if (Object.keys(res.response.user).length === 0) {
+        if (Object.keys(session.user).length === 0) {
             Ext.MessageBox.show({
                 title: 'Warning',
                 closable: false,
@@ -33,18 +33,18 @@ Ext.onReady(function () {
             return Promise.reject('session has been terminated. Please sign in again.');
         }
 
-        ADMIN_STORE.session = res.response;
-        return res;
+        ADMIN_STORE.session = session;
+        return session;
     }
 
     // 최초 전역 language 로드
     return common.utils.ajax.fetch.session()
         .then(sessionChecker)
-        .then(function (res) {
+        .then(function (session) {
             // 세션 주기적으로 체크
             common.utils.ajax.fetch.session.regularCheck(5000, sessionChecker);
 
-            return common.utils.local.load(res.response.user.lang, true);
+            return common.utils.local.load(session.user.lang, true);
         })
         .then(function (lang) {
             var LANG = common.LANG;

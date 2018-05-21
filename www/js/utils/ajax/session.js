@@ -13,7 +13,10 @@
 })(typeof window !== "undefined" ? window : (typeof self !== "undefined" ? self : new Error('This is only support browser!')), function (ajax, fetch) {
 
     function session () {
-        return ajax.get('/Session');
+        return ajax.get('/Session')
+        .then(function (response) {
+            return response.response;
+        });
     }
 
     var regularCheckerNum = -1;

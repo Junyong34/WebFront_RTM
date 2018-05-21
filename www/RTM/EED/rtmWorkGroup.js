@@ -169,12 +169,6 @@ Ext.define('RTM.EED.rtmWorkGroup', {
                 select: function() {
                     // 선택한 이름으로 찾기
                     this.findGroupValue();
-                },
-                keydown: function(comboboxThis, e) {
-                    // keyCode 은 ENTER , 입력 값이 있는경우에만 find and focus된다.
-                    if(e.keyCode === 13 && comboboxThis.getValue()) {
-                        this.findGroupValue();
-                    }
                 }
             }
         });
