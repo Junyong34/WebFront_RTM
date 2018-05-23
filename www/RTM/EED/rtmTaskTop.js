@@ -5,7 +5,7 @@ Ext.define('RTM.EED.rtmTaskTop', {
     width: '100%',
     height: '100%',
     interval: 3000,
-    cls: 'TaskTpsLineChart',
+    cls: 'rtm-base-panel',
     listeners: {
     },
     init: function () {

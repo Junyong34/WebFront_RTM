@@ -9,10 +9,8 @@ Ext.define('RTM.EED.rtmTrackTaskSummary', {
     height   : 50,
     minHeight: 50,
     maxHeight: 50,
-    componentCls : 'rtmTrackTaskSummary',
-
+    cls: 'rtm-base-panel',
     interval : 1000 ,
-
     listeners: {
         destroy  : function(_this){
             // _this.chart.cancelAnimation();
@@ -105,8 +103,8 @@ Ext.define('RTM.EED.rtmTrackTaskSummary', {
         //TODO - data 임시로 받고 있음
         var data = {};
 
-        data.txnToday = Math.floor(Math.random() * 1000000);
-        data.txnYester = Math.floor(Math.random() * 1000000);
+        data.txnToday = Math.floor(Math.random() * 100000000);
+        data.txnYester = Math.floor(Math.random() * 100000000);
 
         data.visitorCnt = Math.floor(Math.random() * 200000);
 

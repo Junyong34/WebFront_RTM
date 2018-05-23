@@ -1,20 +1,24 @@
-.panel_gray .x-header{
-    background-color: blue;
-}
-.panel_gray .ok{
-    background-color: green;
+.panel_gray .x-header {
+	background-color: blue;
 }
 
-.panel_gray .x-header{
-    background-color: yellow;
+.panel_gray .ok {
+	background-color: green;
 }
-.panel_gray .cancel{
-    background-color: red;
+
+.panel_gray .x-header {
+	background-color: yellow;
 }
+
+.panel_gray .cancel {
+	background-color: red;
+}
+
 .edd-container-gray {
-    background-color: #212227 !important;
-    border-color: #474a53;
+	background-color: #212227 !important;
+	border-color: #474a53;
 }
+
 /* flot chart 레전드 스타일 변경 */
 .legend-container {
 	/*background-color: #fff;*/
@@ -27,6 +31,142 @@
 	/*top: -12px;*/
 	/*left: 165px;*/
 }
+
 .legendLabel {
 	color: #ABAEB5;
+}
+
+/****************************************  신호등 그리드 알람 스타일  *******************************/
+.circle-container {
+	display: inline-block;
+	position: relative;
+}
+
+.circle-container .alarm-circle {
+	width: inherit;
+	height: inherit;
+}
+
+.alarm-circle {
+	border-radius: 50%;
+	position: absolute;
+	background-color: #5D5D5D;
+}
+
+#alarm-content {
+	width: 22px;
+	height: 22px;
+}
+
+.alarm-radius {
+	width: 16px;
+	height: 16px;
+	border-radius: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.alarm-level-place.normal {
+	/*    background:#ea4335;  */
+	background: radial-gradient(farthest-side at 40% 40%, white, #42A5F6, #42A5F6);
+	z-index: 2;
+}
+
+.alarm-level-place.warning {
+	/*    background:#ea4335;  */
+	background: radial-gradient(farthest-side at 40% 40%, white, #FF9803, #FF9803);
+	z-index: 2;
+}
+
+.alarm-level-place.critical {
+	/*    background:#ea4335;  */
+	background: radial-gradient(farthest-side at 40% 40%, white, #D7000F, #D7000F);
+	z-index: 2;
+}
+
+.alarm-radius .border-animation, .alarm-level-place {
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	border-radius: 100%;
+}
+
+.alarm-radius .border-animation {
+	z-index: 1;
+}
+
+.ba1.normal {
+	animation: rounder1 1s linear 1s infinite alternate;
+	background: rgba(66, 165, 246, 0.6);
+}
+
+.ba1.warning {
+	animation: rounder1 1s linear 1s infinite alternate;
+	background: rgba(255, 152, 3, 0.6);
+}
+
+.ba1.critical {
+	animation: rounder1 1s linear 1s infinite alternate;
+	background: rgba(215, 0, 15, 0.6);
+}
+
+@keyframes rounder1 {
+	from {
+		transform: scale(1);
+	}
+	to {
+		transform: scale(1.2);
+	}
+}
+
+.ba2.normal {
+	animation: rounder2 1s linear 1s infinite alternate;
+	background: rgba(66, 165, 246, 0.5);
+}
+
+.ba2.warning {
+	animation: rounder2 1s linear 1s infinite alternate;
+	background: rgba(255, 152, 3, 0.5);
+}
+
+.ba2.critical {
+	animation: rounder2 1s linear 1s infinite alternate;
+	background: rgba(215, 0, 15, 0.5);
+}
+
+@keyframes rounder2 {
+	from {
+		transform: scale(1);
+	}
+	to {
+		transform: scale(1.3);
+	}
+}
+
+.ba3.normal {
+	animation: rounder3 1s linear 1s infinite alternate;
+	background: rgba(66, 165, 246, 0.4);
+}
+
+.ba3.warning {
+	animation: rounder3 1s linear 1s infinite alternate;
+	background: rgba(255, 152, 3, 0.4);
+}
+
+.ba3.critical {
+	animation: rounder3 1s linear 1s infinite alternate;
+	background: rgba(215, 0, 15, 0.4);
+}
+
+@keyframes rounder3 {
+	from {
+		transform: scale(1);
+	}
+	to {
+		transform: scale(1.4);
+	}
 }

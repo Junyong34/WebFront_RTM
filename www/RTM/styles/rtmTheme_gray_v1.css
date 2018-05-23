@@ -315,6 +315,7 @@
 
 .mx-theme-gray .x-panel-body {
 	border-color: #393c43;
+	background-color: #393c43;
 }
 .mx-theme-gray .x-panel-header-title-default {
 	font-family: 'Droid Sans', NanumGothic;
@@ -323,10 +324,12 @@
 	font-size: 12px;
 	font-weight: normal;
 }
-.mx-theme-gray .x-autocontainer-outerCt {
+
+.mx-theme-gray .rtm-base-panel {
 	background-color: #393c43;
 	/*color: #393c43;*/
 }
+
 
 /****************************** RTM Dock Window ************************************/
 .mx-theme-gray .xm-dock-window-base {

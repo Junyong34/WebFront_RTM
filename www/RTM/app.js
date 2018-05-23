@@ -73,6 +73,9 @@ Ext.application({
 
         this.alarmList = Ext.create("RTM.EED.rtmAlarmList");
         this.alarmList.init();
+
+        this.InsTaskAlarm = Ext.create("RTM.EED.rtmInsTaskAlarm");
+        this.InsTaskAlarm.init();
     },
     /**
      * 화면 메인 부분에 보여지는 기본 레이아웃 구성
@@ -242,7 +245,9 @@ Ext.application({
                                 {
                                     xtype: 'panel',
                                     title: '인스턴트별 - 업무',
-                                    flex: 1.8
+                                    flex: 2,
+                                    layout: 'fit',
+                                    items: [this.InsTaskAlarm]
                                 }
                             ]
                         }
@@ -276,7 +281,10 @@ Ext.application({
                             xtype: 'label',
                             text: 'EDD DashBoard',
                             flex: 1,
-                            cls: 'logo-text'
+                            cls: 'logo-text',
+                            style: {
+                                'background': '#393c43'
+                            },
                         }
                     ]
                 },
@@ -284,11 +292,15 @@ Ext.application({
                     xtype: 'panel',
                     height: 50,
                     flex: 3,
+                    style: {
+                        'background': '#393c43'
+                    },
 
                 }, {
                     xtype: 'panel',
                     height: 50,
-                    flex: 3
+                    flex: 3,
+                    cls: 'pppppppp'
                 }
             ]
         });

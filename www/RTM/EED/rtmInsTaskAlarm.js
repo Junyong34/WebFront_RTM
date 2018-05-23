@@ -1,12 +1,11 @@
-Ext.define('RTM.EED.rtmAlarmList', {
+Ext.define('RTM.EED.rtmInsTaskAlarm', {
     extend: 'Ext.container.Container',
-    title: 'rtmAlarmList',
+    title: 'rtmInsTaskAlarm',
     layout: 'fit',
     width: '100%',
     height: '100%',
     // margin: '10 10 10 10',
-    interval: 3000,
-    // cls: 'x-autocontainer-outerCt',
+    interval: 5000,
     cls: 'rtm-base-panel',
     listeners: {},
     init: function () {
@@ -25,9 +24,10 @@ Ext.define('RTM.EED.rtmAlarmList', {
         // 데이타 처리
         this.alarmData();
 
+        // self.testAlarmData();
         setInterval(function () {
             self.testAlarmData();
-        }, 3000);
+        }, interval);
 
     },
     initLayout: function () {
@@ -37,10 +37,6 @@ Ext.define('RTM.EED.rtmAlarmList', {
             // height: '100%',
             margin: '0 10 10 10',
             flex: 1,
-            listeners: {
-                afterrender: function (me) {
-                }.bind(this)
-            }
         });
     },
     createAlarmGrid: function () {
@@ -70,27 +66,16 @@ Ext.define('RTM.EED.rtmAlarmList', {
         this.grid.beginAddColumns();
 
         try {
-            this.grid.addColumn('시간', 'A1', 80, Grid.DateTime, true, false);
-            this.grid.addColumn('대업무명', 'A2', 180, Grid.String, true, false);
-            this.grid.addColumn('소업무명', 'A3', 180, Grid.String, true, false);
-            this.grid.addColumn('호스트명', 'A4', 170, Grid.String, true, false);
-            this.grid.addColumn('에이전트', 'A5', 160, Grid.String, true, false);
-            this.grid.addColumn('이벤트명', 'A6', 170, Grid.String, true, false);
-            this.grid.addColumn('트랜잭션', 'A7', 220, Grid.String, true, false);
-            this.grid.addColumn('상태', 'A8', 100, Grid.StringNumber, true, false);
-            this.grid.addColumn('값', 'A9', 100, Grid.StringNumber, true, false);    // 5
-            this.grid.addColumn('확인여부', 'A10', 80, Grid.String, true, false);
-            // this.grid.addColumn('Elapse Time Ratio (%)'  , 'elapseratio'   ,  90, Grid.Float   , true,  false);
+            this.grid.addColumn('인스턴스명', 'A1', 80, Grid.String, true, false);
+            this.grid.addColumn('출금이체', 'A2', 62, 'center', true, false);
+            this.grid.addColumn('오픈API', 'A3', 62, 'center', true, false);
+            this.grid.addColumn('홈페이지', 'A4', 62, 'center', true, false);
+            this.grid.addColumn('PG업무', 'A5', 62, 'center', true, false);
+            this.grid.addColumn('기타업무', 'A6', 62, 'center', true, false);
 
-            // 아래 두 필드는 보여주진 않지만 필요한 필드
-            this.grid.addColumn('TID', 'tid', 100, Grid.String, false, true);
-            this.grid.addColumn('Was ID', 'wasid', 100, Grid.String, false, true);
-            this.grid.addColumn('Dest', 'dest', 100, Grid.String, false, false);
-            this.grid.addColumn('Dest Hash ID', 'destHash', 1, Grid.String, false, true);
-            this.grid.addColumn('GUID', 'guid', 1, Grid.String, false, false);
-            this.grid.addColumn('Business ID', 'businessId', 1, Grid.String, false, false);
+            // this.grid.addColumn('Elapse Time Ratio (%)'  , 'elapseratio'   ,  90, Grid.Float   , true,  false);
         } finally {
-            this.grid.setOrderAct('A8', 'desc');
+            // this.grid.setOrderAct('A8', 'desc');
             this.grid.endAddColumns();
         }
 
@@ -98,7 +83,11 @@ Ext.define('RTM.EED.rtmAlarmList', {
 
         this.grid.loadLayout();
 
-        this.grid.addRenderer('A8', this.gridStackRenderer.bind(this));
+        this.grid.addRenderer('A2', this.gridStackRenderer.bind(this));
+        this.grid.addRenderer('A3', this.gridStackRenderer.bind(this));
+        this.grid.addRenderer('A4', this.gridStackRenderer.bind(this));
+        this.grid.addRenderer('A5', this.gridStackRenderer.bind(this));
+        this.grid.addRenderer('A6', this.gridStackRenderer.bind(this));
 
 
         this.cellEventCls = this.id + '_grid_ratio';
@@ -209,18 +198,29 @@ Ext.define('RTM.EED.rtmAlarmList', {
         var alarmColor = common.Util.getColor('NORMAL');
         // 0 : noraml  1: warning 2: critical
         alarmColor = value === 0 ? common.Util.getColor('NORMAL') : (value === 1 ? common.Util.getColor('WARNING') : common.Util.getColor('CRITICAL') );
-        var bars = '<div class="' + this.cellEventCls + '" style=" display: block; position: relative; width:' + barWidth + '%; height: 13px; background:' + alarmColor + '">';
+        var levelStr = value === 0 ? 'normal' : (value === 1 ? 'warning' : 'critical' );
+        var alarmView = '<div id="alarm-content" class="circle-container">';
+        alarmView += '<div id="outerC2" class="alarm-circle">';
+        alarmView += '<div class="alarm-radius">';
+        alarmView += '<span class="'+"alarm-level-place " + levelStr +'" ></span>';
+        alarmView += '<span class="'+"border-animation ba1 " + levelStr +'"></span>';
+        alarmView += '<span class="'+"border-animation ba2 " + levelStr +'"></span>';
+        alarmView += '<span class="'+"border-animation ba3 " + levelStr +'"></span>';
+        alarmView += '</div>';
+        alarmView += '</div>';
+        alarmView += '</div>';
 
-        // dwidth = (+etime === 0)? 0 : Math.round(dtime / etime * barWidth);
-        // if (dwidth > 100) {
-        //     dwidth = 100;
-        // }
-        // ewidth = barWidth - dwidth;
-
-        // bars += '<div style="display: inline-block; background: #098FFF;width:'+ewidth + '%; height: 13px; float: left;"></div>';
-        // bars += '<div style="display: inline-block; background: #09FFC3;width:'+dwidth + '%; height: 13px; float: left;"></div>';
-
-        return bars;
+        // <div id="alarm-content" class="circle-container">
+        //     <div id="outerC2" class="alarm-circle">
+        //     <div class="alarm-radius">
+        //     <span class="alarm-level-place "></span>
+        //     <span class="border-animation ba1"></span>
+        //     <span class="border-animation ba2"></span>
+        //     <span class="border-animation ba3"></span>
+        //     </div>
+        //     </div>
+        //     </div>
+        return alarmView;
     },
 
     /**
@@ -257,86 +257,36 @@ Ext.define('RTM.EED.rtmAlarmList', {
             },
             "data": [
                 {
-                    "time": new Date().getTime(),
-                    "server_id": 100,
-                    "server_name": "tomcat_100_8080",
-                    "tier_id": Math.random() * 100 + 'test',
-                    "business_id": Math.random() * 100,
-                    "alert_type": "WAS STAT",
-                    "alert_name": "Concurrent Users",
-                    "alert_level": 1,
-                    "alert_value": 1
+                    "instance" : 'TaskTest0',
+                    "A1" : Math.floor(Math.random() * 3) ,
+                    "A2" : Math.floor(Math.random() * 3) ,
+                    "A3" : Math.floor(Math.random() * 3) ,
+                    "A4" : Math.floor(Math.random() * 3) ,
+                    "A5" : Math.floor(Math.random() * 3) ,
+                    "A6" : Math.floor(Math.random() * 3) ,
+
                 },
-                {
-                    "time": new Date().getTime(),
-                    "server_id": 100,
-                    "server_name": "tomcat_100_8080",
-                    "tier_id": Math.random() * 100 + 'test',
-                    "business_id": Math.random() * 100,
-                    "alert_type": "WAS STAT",
-                    "alert_name": "Concurrent Users",
-                    "alert_level": Math.floor(Math.random() * 3) ,
-                    "alert_value": 1
-                },
-                {
-                    "time": new Date().getTime(),
-                    "server_id": 200,
-                    "server_name": "tomcat_100_8080",
-                    "tier_id": Math.random()*100 + 'test',
-                    "business_id": Math.random()*100 ,
-                    "alert_type": "WAS STAT",
-                    "alert_name": "Concurrent Users",
-                    "alert_level":  Math.floor(Math.random() * 3) ,
-                    "alert_value": 3
-                },
-                {
-                    "time": new Date().getTime(),
-                    "server_id": 300,
-                    "server_name": "tomcat_100_8080",
-                    "tier_id": Math.random()*100 + 'test',
-                    "business_id": Math.random()*100 ,
-                    "alert_type": "WAS STAT",
-                    "alert_name": "Concurrent Users",
-                    "alert_level":  Math.floor(Math.random() * 3) ,
-                    "alert_value": 1
-                },
-                {
-                    "time": new Date().getTime(),
-                    "server_id": 200,
-                    "server_name": "tomcat_100_8080",
-                    "tier_id": Math.random()*100 + 'test',
-                    "business_id":  Math.floor(Math.random() * 3) ,
-                    "alert_type": "WAS STAT",
-                    "alert_name": "Concurrent Users",
-                    "alert_level": 1,
-                    "alert_value": 1
-                }
-                ,
-                {
-                    "time": new Date().getTime(),
-                    "server_id": 200,
-                    "server_name": "tomcat_100_8080",
-                    "tier_id":Math.random()*100 + 'test',
-                    "business_id": Math.random()*100,
-                    "alert_type": "WAS STAT",
-                    "alert_name": "Concurrent Users",
-                    "alert_level":  Math.floor(Math.random() * 3) ,
-                    "alert_value": 1
-                }
             ]
         };
 
         var parserData = sapmleData.data;
-        var dataKey = ['time', 'server_id', 'server_name', 'tier_id', 'business_id', 'alert_type', 'alert_name', 'alert_level', 'alert_value'];
+        for (var ix = 0 ; ix < 20; ix++) {
+            var dataIns =  {
+                "instance" : 'TaskTest' + ix,
+                "A1" : Math.floor(Math.random() * 3) ,
+                "A2" : Math.floor(Math.random() * 3) ,
+                "A3" : Math.floor(Math.random() * 3) ,
+                "A4" : Math.floor(Math.random() * 3) ,
+                "A5" : Math.floor(Math.random() * 3) ,
+                "A6" : Math.floor(Math.random() * 3) ,
+            }
+            parserData.push(dataIns);
+        }
 
-        // var reformattedArray = parserData.map(function (obj) {
-        //     var rObj = [];
-        //     for (key in dataKey){
-        //         var valueKey = dataKey[key];
-        //         rObj.push(obj.valueKey);
-        //     }
-        //     return rObj;
-        // });
+
+        var dataKey = ['instance', 'A1','A2','A3','A4','A5'];
+
+
         for (let ix = 0; ix < parserData.length; ix++) {
             let dataObj = parserData[ix];
             let dataset = [];
@@ -352,48 +302,30 @@ Ext.define('RTM.EED.rtmAlarmList', {
     testDrawData: function (data) {
 
         this.grid.clearRows();
-        var time, server_id, server_name, business_id, alert_type, alert_name, alert_level, alert_value
-            , A10, A11, A12, A13, A14;
+        var instance, A1, A2, A3, A4, A5;
 
 
         for (ix = 0, ixLen = data.length; ix < ixLen; ix++) {
             var rowData = data[ix];
 
-            time = rowData[0];
-            server_id = rowData[1];
-            server_name = rowData[2];
-            business_id = rowData[3];
-            alert_type = rowData[4];
-            alert_name = rowData[5];
-            alert_level = rowData[6];
-            alert_value = rowData[7];
-            A10 = 100;
-            A11 = 'bbb';
-            A12 = 'ccc';
-            A13 = 'fff';
-            A14 = 100;
+            instance = rowData[0];
+            A1 = rowData[1];
+            A2 = rowData[2];
+            A3 = rowData[3];
+            A3 = rowData[4];
+            A4 = rowData[5];
+            A5 = rowData[6];
 
             // 알람이 들어온지 3초가 지나면 알람을 삭제 처리하는 로직 필요
 
 
             this.grid.addRow([
-                new Date(time),      // 0 Time
-                server_id,       // 1
-                server_name,       // 2
-                business_id,       // 3
-                alert_type,       // 4
-                alert_name,       // 5
-                alert_level,       // 6
-                alert_value,       // 7
-                A10,       // 8
-                A11,       // 9
-                A12,       // 10
-                A13,       // 11
-                A14,       // 12
-                10,       // 13
-                10,       // 14
-                10,       // 15
-                10,       // 16
+                instance,      // 0 Time
+                A1,       // 1
+                A2,       // 2
+                A3,       // 3
+                A4,       // 4
+                A5,       // 5
 
             ]);
         }

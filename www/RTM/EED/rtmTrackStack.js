@@ -5,7 +5,7 @@ Ext.define('RTM.EED.rtmTrackStack', {
     width: '100%',
     height: '100%',
     interval: 500,
-    cls: 'rtmTrackStack',
+    cls: 'rtm-base-panel',
     listeners: {
         destroy: function (_this) {
             if (_this.timer) {

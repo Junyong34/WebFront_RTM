@@ -26,7 +26,11 @@ window.common.Util = {
         PGBAR_SERVER_ON       : "#004790",
         PGBAR_DATA_ON         : "#00A9FF",
         TPS_CHART_AXES        : "#CCCCCC",
-        TPS_CHART_GUIDE       : "#5D5D5D"
+        TPS_CHART_GUIDE       : "#5D5D5D",
+        NORMAL                : "#42A5F6",
+        WARNING               : "#FF9803",
+        CRITICAL              : "#D7000F",
+        TPS_DIAL              : "#41A5F6"
     },
 
     printErr: function(errorStr, callee) {

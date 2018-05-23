@@ -5,7 +5,7 @@ Ext.define('RTM.EED.rtmDomain', {
     width: '100%',
     height: '100%',
     interval: 1000 * 3,
-    cls: 'rtmDomain',
+    cls: 'rtm-base-panel',
     listeners: {
         destroy: function (_this) {
             if (_this.timer) {
@@ -29,23 +29,23 @@ Ext.define('RTM.EED.rtmDomain', {
                         // this.chart.draw(this.chart.id, this.clientWidth, this.clientHeight, true);
                     }
                 }.bind(this),
-                afterrender: function (_this) {
+                render: function (_this) {
                     // this.chart = Ext.create('RTM.EED.rtmDomainChart', {
                     //     layout: 'fit',
                     //     width: 1250,
                     //     height: 590,
                     //     target: _this
                     // });
-                    // this.chart = new DomainChart({
-                    //     width: 1250,
-                    //     height: 590,
-                    //     id: _this.id,
-                    //     tasks: ["입금내역", "출금내역", "송금내역", "계좌이체", "잔액조회", "계좌변경", "거래조회", "도메인", "뱅킹", "통장정리", "신한은행", "신고", "나가기", "종료"]
-                    // });
+                    this.chart = new DomainChart({
+                        width: 1250,
+                        height: 590,
+                        id: _this.id,
+                        tasks: ["입금내역", "출금내역", "송금내역", "계좌이체", "잔액조회", "계좌변경", "거래조회", "도메인", "뱅킹", "통장정리", "신한은행", "신고", "나가기", "종료"]
+                    });
 
                     // this.chart.init(this.chart.id, this.chart.width, this.chart.height);
-                    // this.chart.draw();
-                    // this.drawFrame();
+                    this.chart.draw();
+                    this.drawFrame();
                 }.bind(this)
             }
         });
@@ -65,19 +65,19 @@ Ext.define('RTM.EED.rtmDomain', {
         var data = {};
 
         data.sub1 = {
-            tps: Math.random() * 100,
+            tps: Math.random() * 3000,
             elapse: Math.random() * 100,
             errorCnt: Math.random() * 100
         };
 
         data.sub2 = {
-            tps: Math.random() * 100,
+            tps: Math.random() * 3000,
             elapse: Math.random() * 100,
             errorCnt: Math.random() * 100
         };
 
         data.main = {
-            tps: Math.random() * 10000,
+            tps: Math.random() * 200000,
             elapse: Math.random() * 1000,
             errorCnt: Math.random() * 100
         };

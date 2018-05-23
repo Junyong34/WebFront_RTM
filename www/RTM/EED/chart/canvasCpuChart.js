@@ -243,7 +243,7 @@ var canvasCpuChart = (function () {
             me.ctxTrun.clearRect(0, 0, width, height);
             for (let j = 0; j < me.circleCnt; j++) {
                 // 제일 밖에 있는 원 무한 회전
-                me.ctxTrun.strokeStyle = common.Util.getColor("BLACK", 0.8);
+                me.ctxTrun.strokeStyle = common.Util.getColor("BLACK");
                 me.ctxTrun.lineWidth = 5;
                 me.ctxTrun.beginPath();
                 // ctx.arc(x, y, radiusTwo, startAngle, endAngle, counterClockwise);
@@ -279,7 +279,7 @@ var canvasCpuChart = (function () {
         for (let j = 0; j < this.circleCnt; j++) {
 
             this.ctxTrun.save();
-            this.ctxTrun.strokeStyle = '#262626';
+            this.ctxTrun.strokeStyle =  common.Util.getColor('BLACK');
             this.ctxTrun.lineWidth = 5;
             this.ctxTrun.beginPath();
             // ctx.arc(x, y, radiusTwo, startAngle, endAngle, counterClockwise);

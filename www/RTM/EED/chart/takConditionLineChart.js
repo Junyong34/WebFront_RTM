@@ -1,5 +1,6 @@
 Ext.define('RTM.EED.chart.takConditionLineChart', {
     id: null,
+
     constructor: function (config) {
         var list = Object.keys(config || {});
         for (var ix = 0, ixLen = list.length; ix < ixLen; ix++) {
@@ -11,7 +12,7 @@ Ext.define('RTM.EED.chart.takConditionLineChart', {
         // console.log(this.totalPoints);
 
         this.totalPoints = 20;
-        this.updateInterval = 30000;
+        this.updateInterval = 3000;
         this.now = new Date().getTime();
         this.options = null;
         this.data = [];
@@ -108,13 +109,13 @@ Ext.define('RTM.EED.chart.takConditionLineChart', {
                 tickSize: [6, "second"],
                 tickFormatter: function (v, axis) {
                     var date = new Date(v);
-                    if (date.getSeconds() % 60 == 0) {
+                    if (date.getSeconds() % 3 == 0) {
                         var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
                         var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
                         var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
 
                         // return hours + ":" + minutes + ":" + seconds;
-                        return hours + ":" + minutes;
+                        return hours + ":" + minutes + ":" + seconds;
                     } else {
                         return "";
                     }
