@@ -231,7 +231,7 @@
 	color: #999FA8 !important;
 	text-shadow: none !important;
 	box-shadow: none !important;
-	line-height: 9px !important;
+	/*line-height: 9px !important;*/
 	font-weight: bold;
 }
 
@@ -352,6 +352,12 @@
 	background-color: #30333A;
 	background-repeat: repeat-x;
 	background: -webkit-linear-gradient(top, #393C43, #30333A);
+}
+
+.mx-theme-gray .rtm-base-panel .header-title{
+	font-size: 14px;
+	color: #ABAEB5;
+	right: auto;
 }
 
 .mx-theme-gray .xm-dock-window-base .dockform .header-title{

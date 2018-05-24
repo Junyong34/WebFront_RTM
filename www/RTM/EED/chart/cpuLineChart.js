@@ -123,7 +123,7 @@ Ext.define('RTM.EED.chart.cpuLineChart', {
                 tickSize: [6, "second"],
                 tickFormatter: function (v, axis) {
                     var date = new Date(v);
-                    if (date.getSeconds() % 30 == 0) {
+                    if (date.getSeconds() % 3 == 0) {
                         var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
                         var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
                         var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();

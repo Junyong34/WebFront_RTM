@@ -14,13 +14,13 @@ var canvasCpuChart = (function () {
         this.fontColor = common.Util.getColor('LABEL');
         // 돌아가는 테두리
         this.circleCnt = 4;
-        this.angle = 0;
+        this.angle = 1.5;
         //  돌아가는 방향 시계방향 = false , 시계반대방향 = true
         this.counterClockwise = false;
         // 시작 종료 지점
-        this.startAngle = 1.30 * Math.PI + this.angle;
-        this.endAngle = 1.75 * Math.PI + this.angle;
-        this.title = '';
+        this.startAngle =  // 1.30 * Math.PI + this.angle;
+            this.endAngle = //1.75 * Math.PI + this.angle;
+                this.title = '';
 
     }
 
@@ -175,24 +175,23 @@ var canvasCpuChart = (function () {
             me.ctx.save();
             me.ctx.beginPath();
             me.ctx.lineWidth = 10;
-            me.ctx.lineCap = 'round';
+            me.ctx.lineCap = 'butt';
             me.ctx.shadowBlur = 12;
             if (isNaN(ratio)) {
                 me.ctx.strokeStyle = me.color[0];
                 me.ctx.shadowColor = me.color[0];
-                me.ctx.font = '25px Helvetica';
+                me.ctx.font = '22px Helvetica';
                 me.ctx.fillStyle = me.fontColor;
-                me.ctx.fillText(ratio, width / 2 + 15 - me.ctx.measureText(ratio).width + 10  , me.textYPos + 15);
+                me.ctx.fillText('DOWN', width / 2 + 15 - me.ctx.measureText(ratio).width - 7, me.textYPos + 15);
             } else {
                 //정상처리
                 me.ctx.strokeStyle = me.color[me.alarmLevel];
                 me.ctx.shadowColor = me.color[me.alarmLevel];
                 me.ctx.font = '25px Helvetica';
                 me.ctx.fillStyle = me.fontColor;
-                me.ctx.fillText(ratio, width / 2 + 15 - me.ctx.measureText(ratio).width , me.textYPos + 15);
+                me.ctx.fillText(ratio, width / 2 + 15 - me.ctx.measureText(ratio).width, me.textYPos + 15);
 
             }
-
 
 
             //context.arc(x,y,r,sAngle,eAngle,counterclockwise);
@@ -247,13 +246,14 @@ var canvasCpuChart = (function () {
                 me.ctxTrun.lineWidth = 5;
                 me.ctxTrun.beginPath();
                 // ctx.arc(x, y, radiusTwo, startAngle, endAngle, counterClockwise);
-                me.ctxTrun.arc((me.width / 2), (me.height / 2), me.radius + 10, me.startAngle + me.angle, me.endAngle + me.angle, me.counterClockwise);
+                // me.ctxTrun.arc((me.width / 2), (me.height / 2), me.radius + 10, (me.startAngle + me.angle), (me.endAngle + me.angle), me.counterClockwise);
+                me.ctxTrun.arc((me.width / 2), (me.height / 2), me.radius + 10, Math.PI * (me.angle + 0.5 * j), Math.PI * (me.angle + 0.5 * j + 0.47 ), me.counterClockwise);
                 me.ctxTrun.stroke();
                 me.ctxTrun.closePath();
-                me.startAngle += 0.5 * Math.PI;
-                me.endAngle += 0.5 * Math.PI;
-                me.angle += 0.005;
+                // me.startAngle += 0.5 * Math.PI;
+                // me.endAngle += 0.5 * Math.PI;
             }
+            me.angle += 0.005;
             // console.log(`${me.angle} : angle : ${me.startAngle}  angle : ${me.endAngle}`);
             me.requestAniTimerTrun = requestAnimationFrame(infinityTrun);
         }
@@ -279,7 +279,7 @@ var canvasCpuChart = (function () {
         for (let j = 0; j < this.circleCnt; j++) {
 
             this.ctxTrun.save();
-            this.ctxTrun.strokeStyle =  common.Util.getColor('BLACK');
+            this.ctxTrun.strokeStyle = common.Util.getColor('BLACK');
             this.ctxTrun.lineWidth = 5;
             this.ctxTrun.beginPath();
             // ctx.arc(x, y, radiusTwo, startAngle, endAngle, counterClockwise);
@@ -288,7 +288,7 @@ var canvasCpuChart = (function () {
             this.ctxTrun.closePath();
             this.startAngle += 0.5 * Math.PI;
             this.endAngle += 0.5 * Math.PI;
-            this.angle += 0.0005;
+            // this.angle += 0.0005;
         }
     }
     canvasCpuChart.prototype.animationCanvasDraw = function () {
@@ -375,14 +375,17 @@ var canvasCpuChart = (function () {
         ctxBack.fillRect(10, (height) - (this.radius + 35), width - 20, height / 4);
         ctxBack.restore();
 
+        ctxBack.save();
         var titleWidth = ctxBack.measureText(this.title).width;
         ctxBack.fillStyle = this.fontColor;
-        ctxBack.fillText(this.title, ((width / 2) - (titleWidth / 2)) - 3, height + 15);
         ctxBack.aling = 'center';
-        ctxBack.font = '10px Helvetica';
+        ctxBack.font = '20px Helvetica';
+        ctxBack.fillText(this.title, ((width / 2) - (titleWidth / 2)) - 8, height + 15);
+        ctxBack.restore();
+        ctxBack.font = '12px Roboto Condensed';
         ctxBack.fillStyle = this.fontColor;
-        if(type !== -1)
-        ctxBack.fillText('%', width / 2 + 15, this.textYPos + 17);
+        if (type !== -1)
+            ctxBack.fillText('%', width / 2 + 15, this.textYPos + 17);
     }
     return canvasCpuChart;
 }());

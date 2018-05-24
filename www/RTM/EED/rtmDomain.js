@@ -30,12 +30,6 @@ Ext.define('RTM.EED.rtmDomain', {
                     }
                 }.bind(this),
                 render: function (_this) {
-                    // this.chart = Ext.create('RTM.EED.rtmDomainChart', {
-                    //     layout: 'fit',
-                    //     width: 1250,
-                    //     height: 590,
-                    //     target: _this
-                    // });
                     this.chart = new DomainChart({
                         width: 1250,
                         height: 590,
