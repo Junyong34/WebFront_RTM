@@ -79,10 +79,10 @@ Ext.define('RTM.EED.chart.takConditionLineChart', {
     },
     createDom: function () {
         this.lineArea = document.createElement('div');
-        this.lineArea.style.width = '940px';
-        this.lineArea.style.height = '80px';
+        this.lineArea.style.width = '945px';
+        this.lineArea.style.height = '90px';
         this.lineArea.style.marginLeft = '5px';
-        this.lineArea.style.marginTop = '20px';
+        this.lineArea.style.marginTop = '0px';
         this.legendArea = document.createElement('div');
         this.legendArea.classList.add('legend-container');
         this.legendArea.id = 'cpuLintChart_' + this.id;

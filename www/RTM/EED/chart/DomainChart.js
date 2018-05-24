@@ -194,30 +194,30 @@ var DomainChart = (function() {
 
         props = this.getProps();
 
-        // Position
-        lPosX = PROP.BG_PCHART_RADIAN_SUB * 1.3;
-        lPosY = props.height / 2;
-        mPosX = props.width / 2.1;
-        mPosY = props.height / 2;
+        // Position - 그림을 그리기 위해 필요한 위치 값에 대한 변수
+        lPosX = PROP.BG_PCHART_RADIAN_SUB * 1.3;    // 왼쪽 circle의 x 좌표
+        lPosY = props.height / 2;                   // 왼족 circle의 y 좌표
+        mPosX = props.width / 2.1;                  // 가운데 circle의 x 좌표
+        mPosY = props.height / 2;                   // 가운데 circle의 y 좌표
 
-        PBarLen = mPosX - lPosX;
-        lPBarX = lPosX;
-        lPBarY = lPosY - PROP.PGBAR_HEIGHT / 2;
-        rPBarX = mPosX;
-        rPBarY = mPosY - PROP.PGBAR_HEIGHT / 2;
+        PBarLen = mPosX - lPosX;                    // 각 원을 연결하는 차트가 들어가는 다리의 길이
+        lPBarX = lPosX;                             // 왼쪽 다리의 x 좌표
+        lPBarY = lPosY - PROP.PGBAR_HEIGHT / 2;     // 왼쪽 다리의 y 좌표
+        rPBarX = mPosX;                             // 오른쪽 다리의 x 좌표
+        rPBarY = mPosY - PROP.PGBAR_HEIGHT / 2;     // 오른쪽 다리의 y 좌표
 
-        rPosX = mPosX + PBarLen;
-        rPosY = props.height / 2;
+        rPosX = mPosX + PBarLen;                    // 오른쪽 circle의 x 좌표
+        rPosY = props.height / 2;                   // 오른쪽 circle의 y 좌표
 
-        leftSubTimer  = null;
-        rightSubTimer = null;
-        mainTimer     = null;
+        leftSubTimer  = null;                       // 왼쪽 circle에 대한 timer
+        rightSubTimer = null;                       // 오른쪽 circle에 대한 timer
+        mainTimer     = null;                       // 가운데 circle에 대한 timer
 
-        taskInfos  = {};
-        cirRadians = [3.28,   1.721,   3.175,   1.828,   3.075,   1.925,    2.997,   2.0075,   2.914,   2.085,   2.819,   2.176,  2.715,   2.278];
-        cirRadius  = [89.5,    89.5,    89.5,      91,    90.5,    90.5,     90.5,       91,    91.2,    91.5,      91,   91.8,    91.5,   92];
-        radians    = [10 / 16, 14.4 / 16, 9.2 / 16, 15.1 / 16, 8.5 / 16, 15.63 / 16, 7.8 / 16, 0.15 / 16, 7.1 / 16, 0.65 / 16, 6.3 / 16, 1.44 / 16, 5.6 / 16, 2.1 / 16];
-        radius     = [113, 145, 115, 155, 115, 155, 115, 145, 117, 158, 124, 140, 128, 140];
+        taskInfos  = {};                            // 가운데 circle에서 각 업무명, 업무에 대응하는 색깔 원의 위치 값에 대한 라디안, 반지름 값을 저장하는 객체
+        cirRadians = [3.28,   1.721,   3.175,   1.828,   3.075,   1.925,    2.997,   2.0075,   2.914,   2.085,   2.819,   2.176,  2.715,   2.278];                         // 가운데 원의 조그만 색깔 원들을 그리기 위해 필요한 라디안 값
+        cirRadius  = [89.5,    89.5,    89.5,      91,    90.5,    90.5,     90.5,       91,    91.2,    91.5,      91,   91.8,    91.5,   92];                            // 가운데 원의 조그만 색깔 원들을 그리기 위해 필요한 반지름 값
+        radians    = [10 / 16, 14.4 / 16, 9.2 / 16, 15.1 / 16, 8.5 / 16, 15.63 / 16, 7.8 / 16, 0.15 / 16, 7.1 / 16, 0.65 / 16, 6.3 / 16, 1.44 / 16, 5.6 / 16, 2.1 / 16];   // 가운데 원의 업무명 을 그리기 위해 필요한 라디안 값
+        radius     = [113, 145, 115, 155, 115, 155, 115, 145, 117, 158, 124, 140, 128, 140];                                                                               // 가운데 원의 업무명 을 그리기 위해 필요한 반지름 값
 
         for (ix = 0, ixLen = props.tasks.length; ix < ixLen; ix++) {
             taskInfos[props.tasks[ix]] = {
@@ -228,50 +228,67 @@ var DomainChart = (function() {
             };
         }
 
-        // Chart
-        chartDataLeft  = [];
-        chartDataRight = [];
+        // Chart - 다리에 들어갈 차트에 필요한 변수
+        chartDataLeft  = [];                                                                               // 왼쪽 다리에 들어갈 차트에 넣어줄 데이터 배열
+        chartDataRight = [];                                                                               // 오른쪽 다리에 들어갈 차트에 넣어줄 데이터 배열
 
-        cvsChartWidth  = (mPosX - PROP.BG_PCHART_RADIAN_MAIN) - (lPosX + PROP.BG_PCHART_RADIAN_SUB);
-        cvsChartHeight = PROP.BG_PGBAR_HEIGHT;
-        chartTop       = cvsChartHeight * 0.2;
-        chartBot       = cvsChartHeight * 0.8;
-        leftChartX     = lPosX + PROP.BG_PCHART_RADIAN_SUB;
-        leftChartY     = (lPosY + 4 - PROP.BG_PGBAR_HEIGHT / 2);
-        rightChartX    = mPosX + PROP.BG_PCHART_RADIAN_MAIN;
-        rightChartY    = leftChartY;
+        cvsChartWidth  = (mPosX - PROP.BG_PCHART_RADIAN_MAIN) - (lPosX + PROP.BG_PCHART_RADIAN_SUB);       // 다리에 들어갈 차트를 담는 캔버스의 너비
+        cvsChartHeight = PROP.BG_PGBAR_HEIGHT;                                                             // 다리에 들어갈 차트를 담는 캔버스의 높이
+        chartTop       = cvsChartHeight * 0.2;                                                             // 차트의 실제 top 위치
+        chartBot       = cvsChartHeight * 0.8;                                                             // 차트의 실제 bot 위치
+        leftChartX     = lPosX + PROP.BG_PCHART_RADIAN_SUB;                                                // 왼쪽 다리에 들어갈 차트의 x 좌표
+        leftChartY     = (lPosY + 4 - PROP.BG_PGBAR_HEIGHT / 2);                                           // 왼쪽 다리에 들어갈 차트의 y 좌표
+        rightChartX    = mPosX + PROP.BG_PCHART_RADIAN_MAIN;                                               // 오른쪽 다리에 들어갈 차트의 x 좌표
+        rightChartY    = leftChartY;                                                                       // 오른쪽 다리에 들어갈 차트의 y 좌표
 
-        tick   = 10;
-        deltaX = 0;
+        tick   = 10;                   // 차트의 xaxis 개수
+        deltaX = 0;                    // 차트에서 각 x 값들 사이의 거리 계산을 위한 변수
 
-        // Dial
-        lastMainTPSMax    = 150000;
-        lastLSubTPSMax    = 1300;
-        lastRSubTPSMax    = 3300;
+        // Dial - TPS 다이얼 애니메이션을 표현하기 위해 필요한 변수
+        lastMainTPSMax    = 220000;                             // 가운데 circle에 해당하는 전날 TPS 최대 값
+        lastLSubTPSMax    = 1500;                               // 왼쪽 circle에 해당하는 전날 TPS 최대 값
+        lastRSubTPSMax    = 4000;                              // 오른쪽 circle에 해당하는 전날 TPS 최대 값
 
-        mainDialTick  = 60;
-        mainTickWidth = 12;
-        mainTPSTick   = lastMainTPSMax / mainDialTick;
-        subDialTick   = 45;
-        subTickWidth  = 9;
-        lSubTPSTick   = lastLSubTPSMax / subDialTick;
-        rSubTPSTick   = lastRSubTPSMax / subDialTick;
-        time          = 1;
-        startAlpha    = 0.98;
-        endAlpha      = 1;
+        mainDialTick  = 60;                                     // 가운데 circle의 다이얼의 tick 개수
+        mainTickWidth = 12;                                     // 가운데 circle의 다이얼의 개당 크기
+        mainTPSTick   = lastMainTPSMax / mainDialTick;          // 전날 TPS 최대값 대비 다이얼 tick 개수의 비율로, 한 tick 당 얼만큼의 값을 담고 있어야하는지를 계산하는 변수
 
-        firstInit     = true;
+        subDialTick   = 45;                                     // 왼쪽, 오른쪽 circle의 다이얼의 tick 개수
+        subTickWidth  = 9;                                      // 왼쪽, 오른쪽 circle의 다이얼의 개당 크기
+        lSubTPSTick   = lastLSubTPSMax / subDialTick;           // 전날 TPS 최대값 대비 다이얼 tick 개수의 비율로, 한 tick 당 얼만큼의 값을 담고 있어야하는지를 계산하는 변수
+        rSubTPSTick   = lastRSubTPSMax / subDialTick;           // 전날 TPS 최대값 대비 다이얼 tick 개수의 비율로, 한 tick 당 얼만큼의 값을 담고 있어야하는지를 계산하는 변수
+        time          = 0.01;                                   // 다이얼의 증감을 표현하는 애니메이션이 몇 초안에 완료가 되어야하는지를 나타내는 변수
+        startAlpha    = 0.98;                                   // 처음   tick의 투명도 값.   0 미만이거나 1 초과일 수 없다
+        endAlpha      = 1;                                      // 마지막 tick의 투명도 값. 0 미만이거나 1 초과일 수 없고 startAlpha보다 같거나 큰 값이어야 한다
 
-        subOuterRadius  = PROP.BG_PCHART_RADIAN_SUB - 5;
-        subInnerRadius  = subOuterRadius - 10;
-        mainOuterRadius = PROP.BG_PCHART_RADIAN_MAIN - 5;
-        mainInnerRadius = mainOuterRadius - 10;
+        firstInit     = true;                                   // 화면 로드 후 최초로 데이터를 받아온 것인지 체크하는 변수
 
-        lDialTimer = [null];
-        mDialTimer = [null];
-        rDialTimer = [null];
+        subOuterRadius  = PROP.BG_PCHART_RADIAN_SUB - 5;        // 왼쪽, 오른쪽 circle에 들어가는 TPS 다이얼 tick에 대해서, 원의 중심을 기준으로 tick의 가장 바깥 부분까지의 거리
+        subInnerRadius  = subOuterRadius - 10;                  // 왼쪽, 오른쪽 circle에 들어가는 TPS 다이얼 tick에 대해서, 원의 중심을 기준으로 tick의 가장 안쪽 부분까지의 거리
+        mainOuterRadius = PROP.BG_PCHART_RADIAN_MAIN - 5;       // 가운데 circle에 들어가는 TPS 다이얼 tick에 대해서, 원의 중심을 기준으로 tick의 가장 바깥 부분까지의 거리
+        mainInnerRadius = mainOuterRadius - 10;                 // 가운데 circle에 들어가는 TPS 다이얼 tick에 대해서, 원의 중심을 기준으로 tick의 가장 안쪽 부분까지의 거리
 
-        posXList       = [lPosX, mPosX, rPosX];
+        lDialTimer = [null];                                    // 왼쪽 circle의 다이얼 애니메이션에 대한 timer
+        mDialTimer = [null];                                    // 가운데 circle의 다이얼 애니메이션에 대한 timer
+        rDialTimer = [null];                                    // 오른쪽 circle의 다이얼 애니메이션에 대한 timer
+
+        // --------------------- 다이얼 애니메이션을 그리기 위해서 최종적으로 가지고 다녀야할 변수들 -------------------
+        dialParams = {                                                       // 왼쪽, 가운데, 오른쪽 circle에 대해서 변수들을 갖고 있다.
+            lSub : {
+                draw: {},                                                    // draw는 최초에 다이얼 tick을 그릴 때 사용
+                animation: {}                                                // animatino은 다이얼 애니메이션을 표현할 때 사용
+            },
+            main : {
+                draw: {},
+                animation: {}
+            },
+            rSub : {
+                draw: {},
+                animation: {}
+            }
+        };
+
+        posXList       = [lPosX, mPosX, rPosX];                              //
         posYList       = [lPosY, mPosY, rPosY];
         tickList       = [subTickWidth, mainTickWidth, subTickWidth];
         dialTickList   = [subDialTick, mainDialTick, subDialTick];
@@ -284,62 +301,79 @@ var DomainChart = (function() {
         lastMaxTPSList = [lastLSubTPSMax, lastMainTPSMax, lastRSubTPSMax];
         alarmColorList = ["red", "orange", "#41a5f6"];
 
-        dialParams = {
-            lSub : {
-                draw: {},
-                animation: {}
-            },
-            main : {
-                draw: {},
-                animation: {}
-            },
-            rSub : {
-                draw: {},
-                animation: {}
-            }
-        };
-
         // Alarm
         spinningCnt  = 4;
         spinningRate = 1.5;
         spinningGap  = 0.47;
     };
 
+    /**
+     * dialParams의 각 프로퍼티 값을 새롭게 재정의 하는 메소드.
+     * 일정 주기(3초)마다 데이터가 들어오면 그 데이터에 맞게 dialParams에 대한 프로퍼티 값을 수정해준다.
+     * 게이지의 위치에 대한 라디안 값을 계산하기 위해 필요한 rate 값을 계산하는 구간이기도 하다. 화면이 처음 로드가 되었다면(firstInit === true) 시작 위치는 무조건 12시방향으로,
+     * 두 번째 데이터 로드때부터는 직전 rate 를 이어받는다.
+     *
+     * MAX값보다 더 큰 값이 들어와 게이지가 100%를 넘어가게 될 경우, 실제로는 100%까지만 채우는 방식을 택한다. 이 때 rate의 최대값은 100%이다.
+     * TPSCurrent가 비교 대상인 직전 최대값(lastMAX)보다 크다면, TPSCurrent는 lastMAX로 값을 덮어씌운다.
+     * 다이얼 애니메이션의 로직이 TPSCurrent의 값과 TPSPrevious의 값을 비교하면서 계속해서 채워나갈지 말지 결정하기때문에 TPSCurrent의 최대값은 lastMAX로 되야한다.
+     */
     DomainChart.prototype.initDialParams = function() {
         var ix, jx, rate, TPSCur, TPSPrev;
 
         jx = 0;
         for (ix in dialParams) {
 
-            rate = firstInit ? dialTickList[jx] * 1.5 / dialTickList[jx] : dialParams[ix].animation.rate;
-            TPSCur  = TPSCurrent[jx];
-            TPSPrev = TPSPrevious[jx];
-
             if (firstInit) {
-                TPSCur  = TPSPrev;
-                TPSPrev = 0;
+                rate    = 1.5;
+                TPSCur  = TPSCurrent[jx];
+                TPSPrev = TPSPrevious[jx];
+
             } else {
-                if (TPSCur >= dialParams[ix].animation.lastMAXTPS) {
-                    TPSCurrent[jx] = TPSCur = dialParams[ix].animation.lastMAXTPS;
-                    rate = 3.5 - 2 / dialTickList[jx];
-
-                } else if (TPSCur >= TPSPrev) {
-
+                if (TPSPrevious[jx] > dialParams[ix].animation.lastMAXTPS) {
+                    rate    = 3.5;
+                    TPSPrev = dialParams[ix].animation.lastMAXTPS;
 
                 } else {
+                    rate    = dialParams[ix].animation.rate;
+                    TPSPrev = TPSPrevious[jx];
 
                 }
 
-                if (TPSPrev >= dialParams[ix].animation.lastMAXTPS) {
-                    TPSPrevious[jx] = TPSPrev = dialParams[ix].animation.lastMAXTPS;
-
-                } else if (TPSCur >= TPSPrev) {
-
+                if (TPSCurrent[jx] > dialParams[ix].animation.lastMAXTPS) {
+                    TPSCur = dialParams[ix].animation.lastMAXTPS;
 
                 } else {
+                    TPSCur = TPSCurrent[jx];
 
-                }
+               }
+
             }
+
+            // if (firstInit) {
+            //     TPSCur  = TPSPrev;
+            //     TPSPrev = 0;
+            // } else {
+            //     if (TPSCur >= dialParams[ix].animation.lastMAXTPS) {
+            //         TPSCurrent[jx] = TPSCur = dialParams[ix].animation.lastMAXTPS;
+            //         rate = 3.5 - 2 / dialTickList[jx];
+            //
+            //     } else if (TPSCur >= TPSPrev) {
+            //
+            //
+            //     } else {
+            //
+            //     }
+            //
+            //     if (TPSPrev >= dialParams[ix].animation.lastMAXTPS) {
+            //         TPSPrevious[jx] = TPSPrev = dialParams[ix].animation.lastMAXTPS;
+            //
+            //     } else if (TPSCur >= TPSPrev) {
+            //
+            //
+            //     } else {
+            //
+            //     }
+            // }
 
             dialParams[ix].draw = {
                 ctx         : ctxDial,
@@ -373,6 +407,9 @@ var DomainChart = (function() {
         }
     };
 
+    /**
+     * 원 가장 바깥에서 빙글빙글 도는 애니메이션 구현 부분. CPU Pie Chart에 있는 효과와 동일하다.
+     */
     DomainChart.prototype.alarmAnimation = function() {
         var ix, ixLen;
 
@@ -427,6 +464,9 @@ var DomainChart = (function() {
         ctxChartRight.clearRect(0, 0, width, height);
     };
 
+    /**
+     * 파라미터로 넘긴 캔버스들의 영역을 초기화하는 메소드
+     */
     DomainChart.prototype.clearCanvas = function(ctx) {
         var width, height;
 
@@ -464,38 +504,24 @@ var DomainChart = (function() {
         ctxBG.restore();
     };
 
-    // DomainChart.prototype.dialAnimation = function(params) {
-    //     params.ctx.save();
-    //     params.ctx.strokeStyle = params.color;
-    //     params.ctx.shadowColor = params.color;
-    //     params.ctx.shadowBlur  = 25;
-    //     params.ctx.globalAlpha = params.alpha;
-    //
-    //     params.ctx.save();
-    //     params.ctx.beginPath();
-    //     params.ctx.lineWidth = params.tickWidth;
-    //     params.ctx.moveTo(common.Util.getPosXOnCircle(params.x, params.rate, params.outerRadius), common.Util.getPosYOnCircle(lPosY, params.rate, params.outerRadius));
-    //     params.ctx.lineTo(common.Util.getPosXOnCircle(params.x, params.rate, params.innerRadius), common.Util.getPosYOnCircle(lPosY, params.rate, params.innerRadius));
-    //     params.ctx.stroke();
-    //     params.ctx.closePath();
-    //     params.ctx.restore();
-    //
-    //     params.rate  += 2 / params.dialTick;
-    //     params.alpha += (endAlpha - startAlpha) / params.dialTick;
-    //
-    //     if (params.alpha < 0.9999999999999998) {
-    //         clearTimeout(params.timer[0]);
-    //         params.timer[0] = setTimeout(this.dialAnimation.bind(this, params), time * 1000 / params.dialTick);
-    //     } else {
-    //         clearTimeout(params.timer[0]);
-    //     }
-    //     params.ctx.restore();
-    // };
+    /**
+     * @param params   - dialParam 객체
+     * @param startVal - 시작 값
+     * @param endVal   - 도착지점 값
+     * @param idx      - circle 인덱스. (0: 왼쪽, 1: 가운데, 2: 오른쪽 circle)
+     *
+     * TPSCurrent 값이 TPSPrevious 보다 작을 때 Tick을 채워주는 메소드. startVal,
+     */
+    DomainChart.prototype.dialAnimation = function(params, startVal, endVal, idx) {
 
-    DomainChart.prototype.dialAnimation = function(params) {
+        if (startVal >= endVal) {
+            TPSCurrent[idx] = params.TPSCur = startVal;
+            // clearTimeout(params.timer[0]);
+            cancelAnimationFrame(params.timer[0]);
+            return;
+        }
+
         params.ctx.save();
-        // params.ctx.shadowBlur  = 25;
-        // params.ctx.shadowColor = params.color;
         params.ctx.globalAlpha = params.alpha;
         params.ctx.lineWidth   = params.tickWidth;
 
@@ -509,23 +535,38 @@ var DomainChart = (function() {
         params.ctx.closePath();
         params.ctx.restore();
 
+        startVal       += params.TPSTick;
         params.alpha   += (endAlpha - startAlpha) / params.dialTick;
-        params.TPSPrev += params.TPSTick;
         params.rate    += 2 / params.dialTick;
 
+        // if (endVal > startVal) {
+        //     cancelAnimationFrame(params.timer[0]);
+        //     clearTimeout(params.timer[0]);
+        //     // params.timer[0] = setTimeout(this.dialAnimation.bind(this, params, startVal, endVal, idx), time * 1000 / params.dialTick);
+        //     params.timer[0] = setTimeout(requestAnimationFrame(this.dialAnimation.bind(this, params, startVal, endVal, idx)), time * 1000 / params.dialTick);
+        // } else {
+        //     TPSCurrent[idx] = params.TPSCur = startVal;
+        //     clearTimeout(params.timer[0]);
+        // }
 
-        if (params.TPSCur > params.TPSPrev) {
-            clearTimeout(params.timer[0]);
-            params.timer[0] = setTimeout(this.dialAnimation.bind(this, params), time * 1000 / params.dialTick);
-        } else {
-            clearTimeout(params.timer[0]);
-        }
+        cancelAnimationFrame(params.timer[0]);
+        clearTimeout(params.timer[0]);
+        // params.timer[0] = setTimeout(requestAnimationFrame(this.dialAnimation.bind(this, params, startVal, endVal, idx)), time * 1000 / params.dialTick);
+        params.timer[0] = requestAnimationFrame(this.dialAnimation.bind(this, params, startVal, endVal, idx));
+
 
         params.ctx.restore();
     };
 
-    DomainChart.prototype.dialRevAnimation = function(params) {
+    DomainChart.prototype.dialRevAnimation = function(params, startVal, endVal, idx) {
         var outerX, outerY, innerX, innerY;
+
+        if (startVal <= endVal) {
+            TPSCurrent[idx] = params.TPSCur = startVal;
+            // clearTimeout(params.timer[0]);
+            cancelAnimationFrame(params.timer[0]);
+            return;
+        }
 
         params.ctx.save();
 
@@ -545,12 +586,10 @@ var DomainChart = (function() {
         params.ctx.closePath();
         params.ctx.restore();
 
-
         innerX = common.Util.getPosXOnCircle(params.x, params.rate, params.innerRadius);
         innerY = common.Util.getPosYOnCircle(lPosY, params.rate, params.innerRadius);
 
         params.ctx.lineWidth   = params.tickWidth;
-        // params.ctx.strokeStyle = "#585c65";
         params.ctx.strokeStyle = common.Util.getRGBA("#304152", 1);
         params.ctx.save();
         params.ctx.beginPath();
@@ -560,16 +599,25 @@ var DomainChart = (function() {
         params.ctx.closePath();
         params.ctx.restore();
 
+        startVal       -= params.TPSTick;
         params.rate    -= 2 / params.dialTick;
         params.alpha   -= (endAlpha - startAlpha) / params.dialTick;
-        params.TPSPrev -= params.TPSTick;
 
-        if (params.TPSPrev > params.TPSCur) {
-            clearTimeout(params.timer[0]);
-            params.timer[0] = setTimeout(this.dialRevAnimation.bind(this, params), time * 1000 / params.dialTick);
-        } else {
-            clearTimeout(params.timer[0]);
-        }
+        // if (startVal > endVal) {
+        //     cancelAnimationFrame(params.timer[0]);
+        //     clearTimeout(params.timer[0]);
+        //     // params.timer[0] = setTimeout(this.dialRevAnimation.bind(this, params, startVal, endVal, idx), time * 1000 / params.dialTick);
+        //     params.timer[0] = setTimeout(requestAnimationFrame(this.dialRevAnimation.bind(this, params, startVal, endVal, idx)), time * 1000 / params.dialTick);
+        // } else {
+        //     TPSCurrent[idx] = params.TPSCur = startVal;
+        //     clearTimeout(params.timer[0]);
+        // }
+
+        cancelAnimationFrame(params.timer[0]);
+        clearTimeout(params.timer[0]);
+        // params.timer[0] = setTimeout(requestAnimationFrame(this.dialRevAnimation.bind(this, params, startVal, endVal, idx)), time * 1000 / params.dialTick);
+        params.timer[0] = requestAnimationFrame(this.dialRevAnimation.bind(this, params, startVal, endVal, idx));
+
 
         params.ctx.restore();
     };
@@ -654,6 +702,7 @@ var DomainChart = (function() {
 
         // Tasks Label & Task Circles
         //TODO - 임시로 해놓은 것. setInterval 없앨 것
+        this.drawMainTaskLabel(mPosX, mPosY);
         setInterval(this.drawMainTaskLabel.bind(this, mPosX, mPosY), 3000);
 
         // Draw Dial & Max Gauge of TPS
@@ -663,6 +712,7 @@ var DomainChart = (function() {
         }
 
         // Draw Alarm Sign
+        this.drawTaskCircle();
         setInterval(this.drawTaskCircle.bind(this), 3000);
     };
 
@@ -1120,17 +1170,23 @@ var DomainChart = (function() {
         ctxAlarm.restore();
     };
 
+    /**
+     * data를 주기적으로 받아서 데이터 초기화를 하는 메소드
+     * TPSPrevious와 TPSCurrent. 2가지 지표를 가지고 다이얼 애니메이션을 조절한다.
+     * 화면이 처음 로드되었을 때(firstInit === true)는 TPSPrevious에만 값을 담아놓는다. 이 때 TPSCurrnt는 0으로 초기화 값이 유지가 되는 상태
+     * 두 번째 데이터 로드(firstInit === false)때 부터 TPSPrevious에 TPSCurrent를 옮겨 담고, TPSCurrent에 새로운 데이터 값을 넣는다.
+     * 다이얼 애니메이션은 기본적으로 TPSCurrent의 값이 TPSPrevious의 값보다 크면 더 큰 값이 들어왔으므로 게이지를 채우고, 작으면 더 작은 값이 들어왔으므로 게이지를 줄이는 방식이다.
+     */
     DomainChart.prototype.drawPacketData = function(data) {
         this.clearCanvas([ctxData, ctxChartLeft, ctxChartRight]);
 
         if (firstInit) {
             TPSPrevious = [data.sub1.tps, data.main.tps, data.sub2.tps];
-        } else {
-            if (TPSCurrent[0] !== 0 || TPSCurrent[1] !== 0 || TPSCurrent[2] !== 0) {
-                TPSPrevious = TPSCurrent.slice();
-            }
 
-            TPSCurrent = [data.sub1.tps, data.main.tps, data.sub2.tps];
+        } else {
+            TPSPrevious = TPSCurrent.slice();
+            TPSCurrent  = [data.sub1.tps, data.main.tps, data.sub2.tps];
+
         }
 
         // Data - TPS, Elapse, Error Count
@@ -1144,7 +1200,7 @@ var DomainChart = (function() {
     };
 
     DomainChart.prototype.startAnimation = function() {
-        var ix, timer;
+        var ix, idx, timer, params;
 
         clearTimeout(lDialTimer[0]);
         clearTimeout(mDialTimer[0]);
@@ -1159,42 +1215,29 @@ var DomainChart = (function() {
         // init params
         this.initDialParams();
 
-        // closure 구현을 피하기 위해 3번에 걸쳐서 사용
-        if (firstInit) {
-            timer = dialParams["lSub"].animation.timer;
-            timer[0] = setTimeout(this.dialAnimation.bind(this, dialParams["lSub"].animation), 0);
+        idx = 0;
+        for (ix in dialParams) {
+            timer = dialParams[ix].animation.timer;
+            params = dialParams[ix].animation;
 
-            timer = dialParams["rSub"].animation.timer;
-            timer[0] = setTimeout(this.dialAnimation.bind(this, dialParams["rSub"].animation), 0);
+                if (firstInit) {
+                    // timer[0] = setTimeout(this.dialAnimation.bind(this, params, params.TPSCur, params.TPSPrev, idx), 0);
+                    timer[0] = requestAnimationFrame(this.dialAnimation.bind(this, params, params.TPSCur, params.TPSPrev, idx));
+                } else {
+                    if (params.TPSPrev > params.TPSCur) {
+                        // timer[0] = setTimeout(this.dialRevAnimation.bind(this, params, params.TPSPrev, params.TPSCur, idx), 0);
+                        timer[0] = requestAnimationFrame(this.dialRevAnimation.bind(this, params, params.TPSPrev, params.TPSCur, idx));
+                    } else if (params.TPSCur > params.TPSPrev) {
+                        // timer[0] = setTimeout(this.dialAnimation.bind(this, params, params.TPSPrev, params.TPSCur, idx), 0);
+                        timer[0] = requestAnimationFrame(this.dialAnimation.bind(this, params, params.TPSPrev, params.TPSCur, idx));
+                    }
+                }
 
-            timer = dialParams["main"].animation.timer;
-            timer[0] = setTimeout(this.dialAnimation.bind(this, dialParams["main"].animation), 0);
-
-            firstInit = false;
-        } else {
-            timer = dialParams["lSub"].animation.timer;
-            if (dialParams["lSub"].animation.TPSCur < dialParams["lSub"].animation.TPSPrev) {
-                timer[0] = setTimeout(this.dialRevAnimation.bind(this, dialParams["lSub"].animation), 0);
-            } else if (dialParams["lSub"].animation.TPSCur > dialParams["lSub"].animation.TPSPrev) {
-                timer[0] = setTimeout(this.dialAnimation.bind(this, dialParams["lSub"].animation), 0);
-            }
-
-
-            timer = dialParams["rSub"].animation.timer;
-            if (dialParams["rSub"].animation.TPSCur < dialParams["rSub"].animation.TPSPrev) {
-                timer[0] = setTimeout(this.dialRevAnimation.bind(this, dialParams["rSub"].animation), 0);
-            } else if (dialParams["rSub"].animation.TPSCur > dialParams["rSub"].animation.TPSPrev) {
-                timer[0] = setTimeout(this.dialAnimation.bind(this, dialParams["rSub"].animation), 0);
-            }
-
-
-            timer = dialParams["main"].animation.timer;
-            if (dialParams["main"].animation.TPSCur < dialParams["main"].animation.TPSPrev) {
-                timer[0] = setTimeout(this.dialRevAnimation.bind(this, dialParams["main"].animation), 0);
-            } else if (dialParams["main"].animation.TPSCur > dialParams["main"].animation.TPSPrev) {
-                timer[0] = setTimeout(this.dialAnimation.bind(this, dialParams["main"].animation), 0);
-            }
+            idx++;
         }
+
+        firstInit = false;
+
     };
 
     return DomainChart;

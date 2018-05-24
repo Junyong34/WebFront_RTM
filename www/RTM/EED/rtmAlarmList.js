@@ -1,6 +1,6 @@
 Ext.define('RTM.EED.rtmAlarmList', {
-    extend: 'Ext.container.Container',
-    title: 'rtmAlarmList',
+    extend: 'EXEM.rtmBasicLayout',
+    title: '',
     layout: 'fit',
     width: '100%',
     height: '100%',
@@ -9,6 +9,17 @@ Ext.define('RTM.EED.rtmAlarmList', {
     // cls: 'x-autocontainer-outerCt',
     cls: 'rtm-base-panel',
     listeners: {},
+    constructor: function (config) {
+        this.callParent();
+        // 옵션값 설정
+        var list = Object.keys(config || {});
+        for (var ix = 0, ixLen = list.length; ix < ixLen; ix++) {
+            this[list[ix]] = config[list[ix]];
+        }
+        // init 초기셋팅
+        this.init();
+
+    },
     init: function () {
         var self = this;
         this.testData = [];
@@ -24,13 +35,15 @@ Ext.define('RTM.EED.rtmAlarmList', {
 
         // 데이타 처리
         this.alarmData();
-
+        // self.testAlarmData();
         setInterval(function () {
             self.testAlarmData();
         }, 3000);
 
     },
     initLayout: function () {
+
+        this.frameTitle.setText(this.title);
         this.gridArea = Ext.create('Ext.container.Container', {
             layout: 'fit',
             // width: '100%',
@@ -40,6 +53,31 @@ Ext.define('RTM.EED.rtmAlarmList', {
             listeners: {
                 afterrender: function (me) {
                 }.bind(this)
+            }
+        });
+
+        this.optionButton = Ext.create('Ext.container.Container', {
+            width: 17,
+            height: 17,
+            margin: '2 8 0 0',
+            html: '<div class="frame-option-icon" title="' + 'option' + '"/>',
+            listeners: {
+                scope: this,
+                render: function (me) {
+                    me.el.on('click', function () {
+                        this.groupListWindow = Ext.create('RTM.EED.rtmWorkGroup', {
+                            style: {'z-index': '10'},
+                            useSelect: false,
+                            title: '업무목록'
+                        });
+
+                        this.groupListWindow.groupName = common.Util.sort(["송금내역", "입급내역", "출금내역", "계좌이체", "통장정리"], 'asc');
+                        this.groupListWindow.dataRow = common.Util.sort(["송금내역", "입급내역", "출금내역", "계좌이체", "통장정리"], 'asc');
+                        this.groupListWindow.targetGroup = this;
+                        this.groupListWindow.init();
+                        this.groupListWindow.show();
+                    }, this);
+                }
             }
         });
     },
@@ -52,6 +90,7 @@ Ext.define('RTM.EED.rtmAlarmList', {
             width: '100%',
             height: '100%',
             localeType: 'H:i:s',
+            // adjustGrid: true,
             usePager: false,
             borderVisible: true,
             defaultbufferSize: 0,
@@ -70,6 +109,7 @@ Ext.define('RTM.EED.rtmAlarmList', {
         this.grid.beginAddColumns();
 
         try {
+            this.grid.addColumn('시간', 'A0', 80, Grid.DateTime, false, true);
             this.grid.addColumn('시간', 'A1', 80, Grid.DateTime, true, false);
             this.grid.addColumn('대업무명', 'A2', 180, Grid.String, true, false);
             this.grid.addColumn('소업무명', 'A3', 180, Grid.String, true, false);
@@ -145,7 +185,17 @@ Ext.define('RTM.EED.rtmAlarmList', {
         //     },
         // });
         this.gridArea.add(this.grid);
-        this.add(this.gridArea);
+        this.baseTopContainer.add(this.frameTitle, {
+            xtype: 'tbfill',
+            flex: 1
+        }, {
+            xtype: 'tbfill',
+            flex: 1
+        }, {
+            xtype: 'tbfill',
+            flex: 1
+        });
+        this.baseBodyContainer.add(this.gridArea);
         //
         // this.addContextMenu();
         this.grid.drawGrid();
@@ -205,11 +255,11 @@ Ext.define('RTM.EED.rtmAlarmList', {
         // var etime = record.get('elapsedtime');
         // var dtime = record.get('dbtime');
 
-        var barWidth = 100;
+        var barWidth = 80;
         var alarmColor = common.Util.getColor('NORMAL');
         // 0 : noraml  1: warning 2: critical
         alarmColor = value === 0 ? common.Util.getColor('NORMAL') : (value === 1 ? common.Util.getColor('WARNING') : common.Util.getColor('CRITICAL') );
-        var bars = '<div class="' + this.cellEventCls + '" style=" display: block; position: relative; width:' + barWidth + '%; height: 13px; background:' + alarmColor + '">';
+        var bars = '<div class="' + this.cellEventCls + '" style=" display: block; position: relative; width:' + barWidth + 'px; height: 13px; background:' + alarmColor + '">';
 
         // dwidth = (+etime === 0)? 0 : Math.round(dtime / etime * barWidth);
         // if (dwidth > 100) {
@@ -275,37 +325,37 @@ Ext.define('RTM.EED.rtmAlarmList', {
                     "business_id": Math.random() * 100,
                     "alert_type": "WAS STAT",
                     "alert_name": "Concurrent Users",
-                    "alert_level": Math.floor(Math.random() * 3) ,
+                    "alert_level": Math.floor(Math.random() * 3),
                     "alert_value": 1
                 },
                 {
                     "time": new Date().getTime(),
                     "server_id": 200,
                     "server_name": "tomcat_100_8080",
-                    "tier_id": Math.random()*100 + 'test',
-                    "business_id": Math.random()*100 ,
+                    "tier_id": Math.random() * 100 + 'test',
+                    "business_id": Math.random() * 100,
                     "alert_type": "WAS STAT",
                     "alert_name": "Concurrent Users",
-                    "alert_level":  Math.floor(Math.random() * 3) ,
+                    "alert_level": Math.floor(Math.random() * 3),
                     "alert_value": 3
                 },
                 {
                     "time": new Date().getTime(),
                     "server_id": 300,
                     "server_name": "tomcat_100_8080",
-                    "tier_id": Math.random()*100 + 'test',
-                    "business_id": Math.random()*100 ,
+                    "tier_id": Math.random() * 100 + 'test',
+                    "business_id": Math.random() * 100,
                     "alert_type": "WAS STAT",
                     "alert_name": "Concurrent Users",
-                    "alert_level":  Math.floor(Math.random() * 3) ,
+                    "alert_level": Math.floor(Math.random() * 3),
                     "alert_value": 1
                 },
                 {
                     "time": new Date().getTime(),
                     "server_id": 200,
                     "server_name": "tomcat_100_8080",
-                    "tier_id": Math.random()*100 + 'test',
-                    "business_id":  Math.floor(Math.random() * 3) ,
+                    "tier_id": Math.random() * 100 + 'test',
+                    "business_id": Math.floor(Math.random() * 3),
                     "alert_type": "WAS STAT",
                     "alert_name": "Concurrent Users",
                     "alert_level": 1,
@@ -316,11 +366,11 @@ Ext.define('RTM.EED.rtmAlarmList', {
                     "time": new Date().getTime(),
                     "server_id": 200,
                     "server_name": "tomcat_100_8080",
-                    "tier_id":Math.random()*100 + 'test',
-                    "business_id": Math.random()*100,
+                    "tier_id": Math.random() * 100 + 'test',
+                    "business_id": Math.random() * 100,
                     "alert_type": "WAS STAT",
                     "alert_name": "Concurrent Users",
-                    "alert_level":  Math.floor(Math.random() * 3) ,
+                    "alert_level": Math.floor(Math.random() * 3),
                     "alert_value": 1
                 }
             ]
@@ -377,6 +427,7 @@ Ext.define('RTM.EED.rtmAlarmList', {
 
 
             this.grid.addRow([
+                0,
                 new Date(time),      // 0 Time
                 server_id,       // 1
                 server_name,       // 2

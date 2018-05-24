@@ -1,13 +1,24 @@
 Ext.define('RTM.EED.rtmInsTaskAlarm', {
-    extend: 'Ext.container.Container',
-    title: 'rtmInsTaskAlarm',
+    extend: 'EXEM.rtmBasicLayout',
+    title: '',
     layout: 'fit',
     width: '100%',
     height: '100%',
     // margin: '10 10 10 10',
-    interval: 5000,
+    interval: 3000,
     cls: 'rtm-base-panel',
     listeners: {},
+    constructor: function (config) {
+        this.callParent();
+        // 옵션값 설정
+        var list = Object.keys(config || {});
+        for (var ix = 0, ixLen = list.length; ix < ixLen; ix++) {
+            this[list[ix]] = config[list[ix]];
+        }
+        // init 초기셋팅
+        this.init();
+
+    },
     init: function () {
         var self = this;
         this.testData = [];
@@ -27,10 +38,11 @@ Ext.define('RTM.EED.rtmInsTaskAlarm', {
         // self.testAlarmData();
         setInterval(function () {
             self.testAlarmData();
-        }, interval);
+        }, this.interval);
 
     },
     initLayout: function () {
+        this.frameTitle.setText(this.title);
         this.gridArea = Ext.create('Ext.container.Container', {
             layout: 'fit',
             // width: '100%',
@@ -38,16 +50,41 @@ Ext.define('RTM.EED.rtmInsTaskAlarm', {
             margin: '0 10 10 10',
             flex: 1,
         });
+        this.optionButton = Ext.create('Ext.container.Container', {
+            width: 17,
+            height: 17,
+            margin: '2 8 0 0',
+            html: '<div class="frame-option-icon" title="' + 'option' + '"/>',
+            listeners: {
+                scope: this,
+                render: function (me) {
+                    me.el.on('click', function () {
+                        this.groupListWindow = Ext.create('RTM.EED.rtmWorkGroup', {
+                            style: {'z-index': '10'},
+                            useSelect: false,
+                            title: '업무목록'
+                        });
+
+                        this.groupListWindow.groupName = common.Util.sort(["송금내역", "입급내역", "출금내역", "계좌이체", "통장정리"], 'asc');
+                        this.groupListWindow.dataRow = common.Util.sort(["송금내역", "입급내역", "출금내역", "계좌이체", "통장정리"], 'asc');
+                        this.groupListWindow.targetGroup = this;
+                        this.groupListWindow.init();
+                        this.groupListWindow.show();
+                    }, this);
+                }
+            }
+        });
     },
     createAlarmGrid: function () {
 
         var self = this;
 
         this.grid = Ext.create('Exem.BaseGrid', {
-            gridName: 'alarmList',
+            gridName: 'InsList',
             width: '100%',
             height: '100%',
             localeType: 'H:i:s',
+            // adjustGrid:true,
             usePager: false,
             borderVisible: true,
             defaultbufferSize: 0,
@@ -134,9 +171,15 @@ Ext.define('RTM.EED.rtmInsTaskAlarm', {
         //     },
         // });
         this.gridArea.add(this.grid);
-        this.add(this.gridArea);
-        //
-        // this.addContextMenu();
+        this.baseTopContainer.add(this.frameTitle, {
+            xtype: 'tbfill',
+            flex: 1
+        }, {
+            xtype: 'tbfill',
+            flex: 1
+        }, this.optionButton);
+        this.baseBodyContainer.add(this.gridArea);
+
         this.grid.drawGrid();
 
     },
@@ -203,9 +246,9 @@ Ext.define('RTM.EED.rtmInsTaskAlarm', {
         alarmView += '<div id="outerC2" class="alarm-circle">';
         alarmView += '<div class="alarm-radius">';
         alarmView += '<span class="'+"alarm-level-place " + levelStr +'" ></span>';
-        alarmView += '<span class="'+"border-animation ba1 " + levelStr +'"></span>';
-        alarmView += '<span class="'+"border-animation ba2 " + levelStr +'"></span>';
-        alarmView += '<span class="'+"border-animation ba3 " + levelStr +'"></span>';
+        // alarmView += '<span class="'+"border-animation ba1 " + levelStr +'"></span>';
+        // alarmView += '<span class="'+"border-animation ba2 " + levelStr +'"></span>';
+        // alarmView += '<span class="'+"border-animation ba3 " + levelStr +'"></span>';
         alarmView += '</div>';
         alarmView += '</div>';
         alarmView += '</div>';

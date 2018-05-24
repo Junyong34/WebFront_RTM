@@ -1,16 +1,15 @@
 Ext.define('RTM.EED.rtmCpuMonitor', {
-    extend: 'Ext.container.Container',
-    title: 'CPU, Memory (Single)',
+    extend: 'EXEM.rtmBasicLayout',
+    title: '',
     padding: 1,
     layout: 'fit',
     width: '100%',
     height: '100%',
     border: true,
     monitorType: null,
-    // cls    	: 'Exem-DockForm Auto-OS',
-    style: {
-        'background': '#393c43',
-    },
+    toggleType: true,
+    padding: '8 0 0 0',
+    cls: 'rtm-base-panel',
     webCpu: {},
     wasCpu: {},
     dbCpu: {},
@@ -37,15 +36,9 @@ Ext.define('RTM.EED.rtmCpuMonitor', {
     },
     init: function () {
 
+        // 컨테이너 제목
+        this.frameTitle.setText(this.title);
 
-        // this.instanceList = window.rtmViewManager.getActivityTabInstance();
-        // this.businessFlag = common.WebEnv.getGroupNameType();
-
-        // var levelColors = common.WebEnv.getLevelColor();
-
-        // this.initFrameOption();
-
-        // this.osData    = {};
         this.osWinFlag = false;
         var levelColors = this.getLevelColor();
         this.cpuColorList = [levelColors.cpu, levelColors.warning, levelColors.critical];
@@ -54,27 +47,27 @@ Ext.define('RTM.EED.rtmCpuMonitor', {
         this.isHPServer = false;
         this.hpStatIdx = null;
 
-        this.baseContainer = Ext.create('Ext.container.Container', {
+        // this.baseContainer = Ext.create('Ext.container.Container', {
+        //     // cls   : 'frame-OS-Label',
+        //     layout: {type: 'vbox', align: 'middle', pack: 'center'},
+        //     flex: 1,
+        //     // style:{
+        //     // 	'background':'red',
+        //     // }
+        // });
+
+        this.bodyContainer = Ext.create('Ext.container.Container', {
             // cls   : 'frame-OS-Label',
-            layout: {type: 'vbox', align: 'middle', pack: 'center'},
+            layout: 'fit',
+            width: '100%',
+            height: '100%',
             flex: 1,
             // style:{
             // 	'background':'red',
             // }
         });
 
-        this.baseBodyContainer = Ext.create('Ext.container.Container', {
-            // cls   : 'frame-OS-Label',
-            layout: 'fit',
-            width: '100%',
-            height: '100%',
-            flex:8,
-            // style:{
-            // 	'background':'red',
-            // }
-        });
-
-        // Arc 차트 영역
+        // // Arc 차트 영역
         this.chartContainerArea = Ext.create('Ext.container.Container', {
             // layout:'fit',
             layout: {type: 'hbox', align: 'middle', pack: 'center'},
@@ -191,29 +184,21 @@ Ext.define('RTM.EED.rtmCpuMonitor', {
             }
         });
 
-        /* title 영역 시작  */
-        this.topOptionContainer = Ext.create('Ext.container.Container', {
-            layout: 'hbox',
-            width: '100%',
-            flex: 1.5,
-            cls: 'xm-container-base',
-            style: {
-                'background': '#393c43',
-            },
-        });
-
-        this.frameTitle = Ext.create('Ext.form.Label', {
-            height: '100%',
-            margin: '0 0 0 10',
-            cls: 'header-title',
-            // text: '제목입니다.'
-        });
+        // this.topOptionContainer = Ext.create('Ext.container.Container', {
+        //     layout: 'hbox',
+        //     width: '100%',
+        //     flex: 1.5,
+        //     cls: 'xm-container-base',
+        //     style: {
+        //         'background': '#393c43',
+        //     },
+        // });
         // 라인차트 영역
         this.lineChartArea = Ext.create('Ext.container.Container', {
             layout: 'fit',
             flex: 8,
             style: {
-                'margin-top' : '10px'
+                'margin-top': '10px'
             },
             listeners: {
                 render: function (me) {
@@ -239,9 +224,12 @@ Ext.define('RTM.EED.rtmCpuMonitor', {
             width: 100,
             height: 20,
             margin: '1 10 0 1',
-            onText: 'Arc',
+            onText: 'gauge',
             offText: 'Line',
-            state: true,
+            state: this.toggleType,
+            style: {
+                'font-size': '10px',
+            },
             listeners: {
                 scope: this,
                 change: function (toggle, state) {
@@ -268,6 +256,15 @@ Ext.define('RTM.EED.rtmCpuMonitor', {
             }
         });
 
+        if (this.toggleType) {
+            this.chartContainerArea.setVisible(true);
+            this.lineChartArea.setVisible(false);
+        } else {
+            this.chartContainerArea.setVisible(false);
+            this.lineChartArea.setVisible(true);
+        }
+
+
         this.optionButton = Ext.create('Ext.container.Container', {
             width: 17,
             height: 17,
@@ -279,12 +276,13 @@ Ext.define('RTM.EED.rtmCpuMonitor', {
                     me.el.on('click', function () {
                         this.groupListWindow = Ext.create('RTM.EED.rtmWorkGroup', {
                             style: {'z-index': '10'},
-                            useSelect: false
+                            useSelect: false,
+                            title: '인스턴스목록',
                         });
 
-                        this.groupListWindow.groupName     = common.Util.sort(["단말", "거래", "업무", "처리량", "실행시간"], 'asc');
-                        this.groupListWindow.dataRow       = common.Util.sort(["단말", "거래", "업무", "처리량", "실행시간"], 'asc');
-                        this.groupListWindow.targetGroup   = this;
+                        this.groupListWindow.groupName = common.Util.sort(["taskIns1", "taskIns2", "taskIns3", "taskIns4", "taskIns6"], 'asc');
+                        this.groupListWindow.dataRow = common.Util.sort(["taskIns1", "taskIns2", "taskIns3", "taskIns5", "taskIns6"], 'asc');
+                        this.groupListWindow.targetGroup = this;
                         this.groupListWindow.init();
                         this.groupListWindow.show();
                     }, this);
@@ -294,18 +292,23 @@ Ext.define('RTM.EED.rtmCpuMonitor', {
         /* title 영역 끝 */
 
 
-        this.topOptionContainer.add(this.frameTitle, {
+        // this.topOptionContainer.add(this.frameTitle, {
+        //     xtype: 'tbfill',
+        //     flex: 1
+        // }, this.toggle, this.optionButton);
+        this.baseTopContainer.add(this.frameTitle, {
             xtype: 'tbfill',
             flex: 1
         }, this.toggle, this.optionButton);
         this.chartContainerArea.add(webCpuChart, wasCpuChart, dbCpuChart);
-        this.baseBodyContainer.add(this.chartContainerArea, this.lineChartArea)
-        this.baseContainer.add(this.topOptionContainer, this.baseBodyContainer);
-        this.add(this.baseContainer);
+        this.bodyContainer.add(this.chartContainerArea, this.lineChartArea);
+        this.baseBodyContainer.add(this.bodyContainer);
+        // this.baseContainer.add(this.topOptionContainer, this.baseBodyContainer);
+        // this.add(this.baseContainer);
 
 
     },
-    changeGroup : function(pGroupName) {
+    changeGroup: function (pGroupName) {
         // pGroupName: 팝업에서 선택했던 값
         console.dir(pGroupName);
     },
