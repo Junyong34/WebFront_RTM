@@ -55,10 +55,13 @@ Ext.application({
 
         this.webCpuChart = Ext.create('RTM.EED.rtmCpuMonitor', {
             monitorType: 'web',
+            title: 'Web CPU',
         });
         // this.webCpuChart.init();
         this.wasCpuChart = Ext.create('RTM.EED.rtmCpuMonitor', {
             monitorType: 'was',
+            title: 'WAS CPU',
+            toggleType: false, // 게이지(true) or 라인차트(false)
         });
         // this.wasCpuChart.init();
         this.dbCpuChart = Ext.create('RTM.EED.rtmCpuMonitor', {
@@ -70,16 +73,10 @@ Ext.application({
             title: '주요 업무별 TPS 현황 (TOP 5)',
         });
 
-        this.domainChart = Ext.create("RTM.EED.rtmDomain");
-        this.domainChart.init();
-
-        this.alarmList = Ext.create("RTM.EED.rtmAlarmList", {
-            title: '실시간 이벤트 알람 목록',
+        this.domainChart = Ext.create("RTM.EED.rtmDomain", {
+            title: '주요 업무별 TPS 현황 (TOP 5)',
         });
 
-        this.InsTaskAlarm = Ext.create("RTM.EED.rtmInsTaskAlarm", {
-            title: '인스턴트별 - 업무',
-        });
         this.alarmList = Ext.create("RTM.EED.rtmAlarmList", {
             title: '실시간 이벤트 알람 목록',
         });
@@ -230,8 +227,9 @@ Ext.application({
                                                     xtype: 'splitter',
                                                     height: 5
                                                 }, {
-                                                    xtype: 'panel',
+                                                    xtype: 'container',
                                                     title: '업무/도메인별',
+                                                    layout: 'fit',
                                                     flex: 6,
                                                     items: [this.domainChart]
                                                 }

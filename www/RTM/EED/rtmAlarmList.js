@@ -9,6 +9,17 @@ Ext.define('RTM.EED.rtmAlarmList', {
     // cls: 'x-autocontainer-outerCt',
     cls: 'rtm-base-panel',
     listeners: {},
+    constructor: function (config) {
+        this.callParent();
+        // 옵션값 설정
+        var list = Object.keys(config || {});
+        for (var ix = 0, ixLen = list.length; ix < ixLen; ix++) {
+            this[list[ix]] = config[list[ix]];
+        }
+        // init 초기셋팅
+        this.init();
+
+    },
     init: function () {
         var self = this;
         this.testData = [];
@@ -180,7 +191,10 @@ Ext.define('RTM.EED.rtmAlarmList', {
         }, {
             xtype: 'tbfill',
             flex: 1
-        }, this.optionButton);
+        }, {
+            xtype: 'tbfill',
+            flex: 1
+        });
         this.baseBodyContainer.add(this.gridArea);
         //
         // this.addContextMenu();
