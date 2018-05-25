@@ -81,11 +81,17 @@ Ext.define('RTM.EED.rtmDomain', {
             }
         });
 
+
         this.baseTopContainer.add(this.frameTitle, {
             xtype: 'tbfill',
             flex: 1
-        },  this.optionButton);
+        }, {
+            xtype: 'tbfill',
+            flex: 1
+        }, this.optionButton);
         this.baseBodyContainer.add(this.chartArea);
+
+
 
     },
 

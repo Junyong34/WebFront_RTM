@@ -1,0 +1,9 @@
+/.externalToolBuilders
+/.idea
+/.settings/
+/bin/
+/build/
+/z_worker/
+/.classpath
+/.project
+.gitignore
