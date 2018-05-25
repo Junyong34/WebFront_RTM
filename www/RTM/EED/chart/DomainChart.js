@@ -3,8 +3,8 @@ var DomainChart = (function() {
 
     // Image
     var imgIcon = {
-        "mainCircle": "images/was_Bg.png",
-        "subCircle": "images/web_Db.png"
+        "mainCircle"  : "images/was_Bg.png",
+        "subCircle"   : "images/web_Db.png"
     };
     var imgPt = {
         "mainCircle": {
@@ -43,13 +43,13 @@ var DomainChart = (function() {
     var taskInfos, radians, radius, cirRadians, cirRadius, chartDataLeft, chartDataRight;
 
     // Image
-    var subImg, mainImg, subImgLoaded, mainImgLoaded;
+    var subImg, mainImg;
 
     var tick, deltaX;
 
     // Canvas
-    var canvasBG, canvasEffect, canvasDial, canvasData, canvasTask, canvasAlarm, canvasChartLeft, canvasChartRight;
-    var ctxBG, ctxEffect, ctxDial, ctxData, ctxTask, ctxAlarm, ctxChartLeft, ctxChartRight;
+    var canvasBG, canvasEffect, canvasDial, canvasDialBlink, canvasData, canvasTask, canvasAlarm, canvasChartLeft, canvasChartRight;
+    var ctxBG, ctxEffect, ctxDial, ctxDialBlink, ctxData, ctxTask, ctxAlarm, ctxChartLeft, ctxChartRight;
 
     // Dial
     var lastMainTPSMax, lastLSubTPSMax, lastRSubTPSMax;
@@ -82,7 +82,7 @@ var DomainChart = (function() {
     DomainChart.prototype.constructor = EEDChart;
 
     DomainChart.prototype.initCanvas = function(args) {
-        var w, h, dom;
+        var w, h, dom, that;
 
         dom   = this.getDomContext();
 
@@ -90,87 +90,37 @@ var DomainChart = (function() {
         h     = ( props.height - 50 < props.minHeight ) ? props.minHeight : props.height - 50;
 
         // Canvas
-
-        canvasEffect = document.createElement("canvas");
-        canvasEffect.className       = "domainCanvas";
-        canvasEffect.id              = "canvasEffect";
-        canvasEffect.style.position  = "absolute";
-        canvasEffect.style.top       = 0 + "px";
-        canvasEffect.style.left      = 0 + "px";
-        dom.appendChild(canvasEffect);
-
-        canvasBG = document.createElement("canvas");
-        canvasBG.className         = "domainCanvas";
-        canvasBG.id                = "canvasBG";
-        canvasBG.style.position    = "absolute";
-        canvasBG.style.top         = 0 + "px";
-        canvasBG.style.left        = 0 + "px";
-        dom.appendChild(canvasBG);
-
-        canvasDial = document.createElement("canvas");
-        canvasDial.className       = "domainCanvas";
-        canvasDial.id              = "canvasDial";
-        canvasDial.style.position  = "absolute";
-        canvasDial.style.top       = 0 + "px";
-        canvasDial.style.left      = 0 + "px";
-        dom.appendChild(canvasDial);
-
-        canvasData = document.createElement("canvas");
-        canvasData.className       = "domainCanvas";
-        canvasData.id              = "canvasData";
-        canvasData.style.position  = "absolute";
-        canvasData.style.top       = 0 + "px";
-        canvasData.style.left      = 0 + "px";
-        dom.appendChild(canvasData);
-
-        canvasTask = document.createElement("canvas");
-        canvasTask.className       = "domainCanvas";
-        canvasTask.id              = "canvasTask";
-        canvasTask.style.position  = "absolute";
-        canvasTask.style.top       = 0 + "px";
-        canvasTask.style.left      = 0 + "px";
-        dom.appendChild(canvasTask);
-
-        canvasAlarm = document.createElement("canvas");
-        canvasAlarm.className       = "domainCanvas";
-        canvasAlarm.id              = "canvasAlarm";
-        canvasAlarm.style.position  = "absolute";
-        canvasAlarm.style.top       = mPosY - PROP.MAIN_CIRCLE_FLOOR + "px";
-        canvasAlarm.style.left      = mPosX - PROP.MAIN_CIRCLE_FLOOR + "px";
-        dom.appendChild(canvasAlarm);
-
-        canvasChartLeft = document.createElement("canvas");
-        canvasChartLeft.className      = "domainCanvas-Left";
-        canvasChartLeft.id             = "canvasChartLeft";
-        canvasChartLeft.style.position = "absolute";
-        canvasChartLeft.style.top      = leftChartY + "px";
-        canvasChartLeft.style.left     = leftChartX + "px";
-        dom.appendChild(canvasChartLeft);
-
-        canvasChartRight = document.createElement("canvas");
-        canvasChartRight.className      = "domainCanvas-Right";
-        canvasChartRight.id             = "canvasChartRight";
-        canvasChartRight.style.position = "absolute";
-        canvasChartRight.style.top      = rightChartY + "px";
-        canvasChartRight.style.left     = rightChartX + "px";
-        dom.appendChild(canvasChartRight);
+        canvasEffect     = this.createCanvas("canvasEffect",       dom,                                    0,           0);
+        canvasBG         = this.createCanvas("canvasBG",           dom,                                    0,           0);
+        canvasDial       = this.createCanvas("canvasDial",         dom,                                    0,           0);
+        canvasDialBlink  = this.createCanvas("canvasDialBlink",    dom,                                    0,           0);
+        canvasData       = this.createCanvas("canvasData",         dom,                                    0,           0);
+        canvasTask       = this.createCanvas("canvasTask",         dom,                                    0,           0);
+        canvasAlarm      = this.createCanvas("canvasAlarm",        dom,       mPosY - PROP.MAIN_CIRCLE_FLOOR,           mPosX - PROP.MAIN_CIRCLE_FLOOR);
+        canvasChartLeft  = this.createCanvas("canvasChartLeft",    dom,                           leftChartY,           leftChartX);
+        canvasChartRight = this.createCanvas("canvasChartRight",   dom,                          rightChartY,           rightChartX);
 
         // Image Load
+        this.subImgLoaded  = false;
+        this.mainImgLoaded = false;
+        that = this;
+
         subImg = new Image();
         subImg.src = imgIcon.subCircle;
         subImg.onload = function() {
-            subImgLoaded = true;
+            that.subImgLoaded = true;
         };
 
         mainImg = new Image();
         mainImg.src = imgIcon.mainCircle;
         mainImg.onload = function() {
-            mainImgLoaded = true;
+            that.mainImgLoaded = true;
         };
 
         setCanvasAttr(w, h, canvasBG);
         setCanvasAttr(w, h, canvasEffect);
         setCanvasAttr(w, h, canvasDial);
+        setCanvasAttr(w, h, canvasDialBlink);
         setCanvasAttr(w, h, canvasData);
         setCanvasAttr(w, h, canvasTask);
         setCanvasAttr(PROP.MAIN_CIRCLE_FLOOR * 2, PROP.MAIN_CIRCLE_FLOOR * 2, canvasAlarm);
@@ -180,6 +130,7 @@ var DomainChart = (function() {
         ctxBG         = canvasBG.getContext("2d");
         ctxEffect     = canvasEffect.getContext("2d");
         ctxDial       = canvasDial.getContext("2d");
+        ctxDialBlink  = canvasDialBlink.getContext("2d");
         ctxData       = canvasData.getContext("2d");
         ctxTask       = canvasTask.getContext("2d");
         ctxAlarm      = canvasAlarm.getContext("2d");
@@ -214,10 +165,10 @@ var DomainChart = (function() {
         mainTimer     = null;                       // 가운데 circle에 대한 timer
 
         taskInfos  = {};                            // 가운데 circle에서 각 업무명, 업무에 대응하는 색깔 원의 위치 값에 대한 라디안, 반지름 값을 저장하는 객체
-        cirRadians = [3.28,   1.721,   3.175,   1.828,   3.075,   1.925,    2.997,   2.0075,   2.914,   2.085,   2.819,   2.176,  2.715,   2.278];                         // 가운데 원의 조그만 색깔 원들을 그리기 위해 필요한 라디안 값
-        cirRadius  = [89.5,    89.5,    89.5,      91,    90.5,    90.5,     90.5,       91,    91.2,    91.5,      91,   91.8,    91.5,   92];                            // 가운데 원의 조그만 색깔 원들을 그리기 위해 필요한 반지름 값
-        radians    = [10 / 16, 14.4 / 16, 9.2 / 16, 15.1 / 16, 8.5 / 16, 15.63 / 16, 7.8 / 16, 0.15 / 16, 7.1 / 16, 0.65 / 16, 6.3 / 16, 1.44 / 16, 5.6 / 16, 2.1 / 16];   // 가운데 원의 업무명 을 그리기 위해 필요한 라디안 값
-        radius     = [113, 145, 115, 155, 115, 155, 115, 145, 117, 158, 124, 140, 128, 140];                                                                               // 가운데 원의 업무명 을 그리기 위해 필요한 반지름 값
+        cirRadians = [3.28 ,   1.721,   3.175,   1.828,   3.075,   1.925,    2.997,   2.0075,   2.914,   2.085,   2.819,   2.176,   2.715,   2.278];                         // 가운데 원의 조그만 색깔 원들을 그리기 위해 필요한 라디안 값
+        cirRadius  = [89.5 ,    89.5,    89.5,      91,    90.5,    90.5,     90.5,       91,    91.2,    91.5,      91,    91.8,    91.5,      92];                            // 가운데 원의 조그만 색깔 원들을 그리기 위해 필요한 반지름 값
+        radians    = [1.642,   1.905,   1.585,   1.945,   1.535,   1.977,    1.492,    2.011,   1.447,   2.037,   1.404,   2.085,   1.345,    2.13];   // 가운데 원의 업무명 을 그리기 위해 필요한 라디안 값
+        radius     = [113  ,     160,     115,     165,      115,    170,      115,      160,     118,     175,     124,     148,     128,     146];                                                                               // 가운데 원의 업무명 을 그리기 위해 필요한 반지름 값
 
         for (ix = 0, ixLen = props.tasks.length; ix < ixLen; ix++) {
             taskInfos[props.tasks[ix]] = {
@@ -245,9 +196,9 @@ var DomainChart = (function() {
         deltaX = 0;                    // 차트에서 각 x 값들 사이의 거리 계산을 위한 변수
 
         // Dial - TPS 다이얼 애니메이션을 표현하기 위해 필요한 변수
-        lastMainTPSMax    = 220000;                             // 가운데 circle에 해당하는 전날 TPS 최대 값
+        lastMainTPSMax    = 100000;                             // 가운데 circle에 해당하는 전날 TPS 최대 값
         lastLSubTPSMax    = 1500;                               // 왼쪽 circle에 해당하는 전날 TPS 최대 값
-        lastRSubTPSMax    = 4000;                              // 오른쪽 circle에 해당하는 전날 TPS 최대 값
+        lastRSubTPSMax    = 4000;                               // 오른쪽 circle에 해당하는 전날 TPS 최대 값
 
         mainDialTick  = 60;                                     // 가운데 circle의 다이얼의 tick 개수
         mainTickWidth = 12;                                     // 가운데 circle의 다이얼의 개당 크기
@@ -272,6 +223,19 @@ var DomainChart = (function() {
         mDialTimer = [null];                                    // 가운데 circle의 다이얼 애니메이션에 대한 timer
         rDialTimer = [null];                                    // 오른쪽 circle의 다이얼 애니메이션에 대한 timer
 
+        posXList       = [lPosX, mPosX, rPosX];                              // 각 circle의 중심 x 좌표 모음
+        posYList       = [lPosY, mPosY, rPosY];                              // 각 circle의 중심 y 좌표 모음
+        tickList       = [subTickWidth, mainTickWidth, subTickWidth];        // 각 circle의 다이얼 tick의 두께 모음
+        dialTickList   = [subDialTick, mainDialTick, subDialTick];           // 각 circle의 다이얼 tick의 개수 모음
+        outerRadList   = [subOuterRadius, mainOuterRadius, subOuterRadius];  // 각 circle에서 원의 중점으로부터 다이얼 tick의 끝부분 까지의 반지름 모음
+        innerRadList   = [subInnerRadius, mainInnerRadius, subInnerRadius];  // 각 circle에서 원의 중점으로부터 다이얼 tick의 가장 안쪽까지의 반지름 모음
+        TPSPrevious    = [0, 0, 0];                                          // 각 circle의 TPS 이전 값 모음
+        TPSCurrent     = [0, 0, 0];                                          // 각 circle의 TPS 현재 값 모음
+        TPSTickList    = [lSubTPSTick, mainTPSTick, rSubTPSTick];            // 각 circle의 각 TPS tick의 수치. lastMAX / dialTick 으로 계산된 값의 모음
+        timerList      = [lDialTimer, mDialTimer, rDialTimer];               // 각 circle의 이벤트의 타임 스탬프 모음
+        lastMaxTPSList = [lastLSubTPSMax, lastMainTPSMax, lastRSubTPSMax];   // 각 circle의 전날 TPS MAX 모음
+        alarmColorList = ["red", "orange", "#41a5f6"];                       // 각 circle의 알람 색 모음
+
         // --------------------- 다이얼 애니메이션을 그리기 위해서 최종적으로 가지고 다녀야할 변수들 -------------------
         dialParams = {                                                       // 왼쪽, 가운데, 오른쪽 circle에 대해서 변수들을 갖고 있다.
             lSub : {
@@ -287,19 +251,6 @@ var DomainChart = (function() {
                 animation: {}
             }
         };
-
-        posXList       = [lPosX, mPosX, rPosX];                              //
-        posYList       = [lPosY, mPosY, rPosY];
-        tickList       = [subTickWidth, mainTickWidth, subTickWidth];
-        dialTickList   = [subDialTick, mainDialTick, subDialTick];
-        outerRadList   = [subOuterRadius, mainOuterRadius, subOuterRadius];
-        innerRadList   = [subInnerRadius, mainInnerRadius, subInnerRadius];
-        TPSPrevious    = [0, 0, 0];
-        TPSCurrent     = [0, 0, 0];
-        TPSTickList    = [lSubTPSTick, mainTPSTick, rSubTPSTick];
-        timerList      = [lDialTimer, mDialTimer, rDialTimer];
-        lastMaxTPSList = [lastLSubTPSMax, lastMainTPSMax, lastRSubTPSMax];
-        alarmColorList = ["red", "orange", "#41a5f6"];
 
         // Alarm
         spinningCnt  = 4;
@@ -318,10 +269,11 @@ var DomainChart = (function() {
      * 다이얼 애니메이션의 로직이 TPSCurrent의 값과 TPSPrevious의 값을 비교하면서 계속해서 채워나갈지 말지 결정하기때문에 TPSCurrent의 최대값은 lastMAX로 되야한다.
      */
     DomainChart.prototype.initDialParams = function() {
-        var ix, jx, rate, TPSCur, TPSPrev;
+        var ix, jx, rate, params, TPSCur, TPSPrev;
 
         jx = 0;
         for (ix in dialParams) {
+            params = dialParams[ix].animation;
 
             if (firstInit) {
                 rate    = 1.5;
@@ -329,51 +281,27 @@ var DomainChart = (function() {
                 TPSPrev = TPSPrevious[jx];
 
             } else {
-                if (TPSPrevious[jx] > dialParams[ix].animation.lastMAXTPS) {
-                    rate    = 3.5;
-                    TPSPrev = dialParams[ix].animation.lastMAXTPS;
+                if (TPSPrevious[jx] >= params.lastMAXTPS || TPSCurrent >= params.lastMAXTPS) {
+                    if (TPSPrevious[jx] >= params.lastMAXTPS) {
+                        rate = 3.5 - 2 / params.dialTick;
+                        TPSPrev = params.lastMAXTPS;
+                        TPSCur  = TPSCurrent[jx];
+
+                    } else {
+                        rate = params.rate;
+                        TPSPrev = TPSPrevious[jx];
+                        TPSCur  = TPSCurrent[jx];
+
+                    }
 
                 } else {
-                    rate    = dialParams[ix].animation.rate;
+                    rate = params.rate;
                     TPSPrev = TPSPrevious[jx];
+                    TPSCur  = TPSCurrent[jx];
 
                 }
 
-                if (TPSCurrent[jx] > dialParams[ix].animation.lastMAXTPS) {
-                    TPSCur = dialParams[ix].animation.lastMAXTPS;
-
-                } else {
-                    TPSCur = TPSCurrent[jx];
-
-               }
-
             }
-
-            // if (firstInit) {
-            //     TPSCur  = TPSPrev;
-            //     TPSPrev = 0;
-            // } else {
-            //     if (TPSCur >= dialParams[ix].animation.lastMAXTPS) {
-            //         TPSCurrent[jx] = TPSCur = dialParams[ix].animation.lastMAXTPS;
-            //         rate = 3.5 - 2 / dialTickList[jx];
-            //
-            //     } else if (TPSCur >= TPSPrev) {
-            //
-            //
-            //     } else {
-            //
-            //     }
-            //
-            //     if (TPSPrev >= dialParams[ix].animation.lastMAXTPS) {
-            //         TPSPrevious[jx] = TPSPrev = dialParams[ix].animation.lastMAXTPS;
-            //
-            //     } else if (TPSCur >= TPSPrev) {
-            //
-            //
-            //     } else {
-            //
-            //     }
-            // }
 
             dialParams[ix].draw = {
                 ctx         : ctxDial,
@@ -484,6 +412,21 @@ var DomainChart = (function() {
         }
     };
 
+    DomainChart.prototype.createCanvas = function(className, dom, top, left) {
+        var cvs;
+
+        cvs = document.createElement("canvas");
+        cvs.className       = "domainCanvas";
+        cvs.id              = className;
+        cvs.style.position  = "absolute";
+        cvs.style.top       = top + "px";
+        cvs.style.left      = left + "px";
+
+        dom.appendChild(cvs);
+
+        return cvs;
+    };
+
     DomainChart.prototype.draw = function() {
         this.clearAllCanvas();
         this.drawManager();
@@ -498,6 +441,7 @@ var DomainChart = (function() {
         ctxBG.save();
         ctxBG.fillStyle = common.Util.getColor("background");
 
+        this.drawBGLabel();
         this.drawBGCircle();
         this.drawBGPBar();
         this.drawBGChart();
@@ -510,7 +454,7 @@ var DomainChart = (function() {
      * @param endVal   - 도착지점 값
      * @param idx      - circle 인덱스. (0: 왼쪽, 1: 가운데, 2: 오른쪽 circle)
      *
-     * TPSCurrent 값이 TPSPrevious 보다 작을 때 Tick을 채워주는 메소드. startVal,
+     * TPSCurrent 값이 TPSPrevious 보다 작을 때 Tick을 채워주는 메소드. startVal를 endVal 까지 증가시키면서 한 칸씩 채워나가는 과정
      */
     DomainChart.prototype.dialAnimation = function(params, startVal, endVal, idx) {
 
@@ -558,6 +502,14 @@ var DomainChart = (function() {
         params.ctx.restore();
     };
 
+    /**
+     * @param params   - dialParam 객체
+     * @param startVal - 시작 값
+     * @param endVal   - 도착지점 값
+     * @param idx      - circle 인덱스. (0: 왼쪽, 1: 가운데, 2: 오른쪽 circle)
+     *
+     * TPSCurrent 값이 TPSPrevious 보다 클 때 Tick을 지워주는 메소드. startVal를 endVal 까지 감소시키면서 한 칸씩 지워나가는 과정
+     */
     DomainChart.prototype.dialRevAnimation = function(params, startVal, endVal, idx) {
         var outerX, outerY, innerX, innerY;
 
@@ -685,6 +637,27 @@ var DomainChart = (function() {
         // }
     };
 
+    /**
+     * 각 Circle이 어떤 서버에 연결이 되어있는지 레이블을 그리는 메소드
+     */
+    DomainChart.prototype.drawBGLabel = function() {
+        var ix, ixLen, text;
+
+        ctxBG.save();
+
+        ctxBG.font = common.Util.getFontSize(25);
+        ctxBG.fillStyle = common.Util.COLOR.LABEL;
+        for (ix = 0, ixLen = props.serverList.length; ix < ixLen; ix++) {
+            text = props.serverList[ix];
+            ctxBG.fillText(text, posXList[ix] - common.Util.getTextWidth(text, ctxBG) / 2.8, 40);
+        }
+
+        ctxBG.restore();
+    };
+
+    /**
+     * 이미지 로드, 업무명과 업무명에 대한 알람 표시기, 다이얼, MAX 지표 표시, 블링크 알람 캔버스 그리기
+     */
     DomainChart.prototype.drawContents = function() {
         var ix, lX, lY, mX, mY, rX, rY;
 
@@ -707,7 +680,8 @@ var DomainChart = (function() {
 
         // Draw Dial & Max Gauge of TPS
         for (ix in dialParams) {
-            this.drawDial(dialParams[ix].draw);
+            this.drawDialBackGround(dialParams[ix].draw, dialParams[ix].draw.ctx, common.Util.COLOR.TPS_DIAL, 0.1);
+            // this.drawDialBackGround(dialParams[ix].draw, ctxDialBlink, common.Util.COLOR.SERVER_CRITICAL_DARK, 1);
             this.drawMaxTPS(dialParams[ix].draw);
         }
 
@@ -716,13 +690,18 @@ var DomainChart = (function() {
         setInterval(this.drawTaskCircle.bind(this), 3000);
     };
 
-    DomainChart.prototype.drawDial = function(params) {
+    /**
+     * 다이얼 애니메이션 시작 전에 초기상태로 다이얼을 그리는 메소드
+     * sx, sy 는 원의 중심으로부터 다이얼의 바깥 부분의 x,y 좌표
+     * ex, ey 는 원의 중심으로부터 다이얼의 안쪽 부분의 x,y 좌표
+     */
+    DomainChart.prototype.drawDialBackGround = function(params, ctx, color, alpha) {
         var ix, ixLen, rate, sx, sy, ex, ey;
 
-        params.ctx.save();
-        params.ctx.strokeStyle = common.Util.getRGBA("#41a5f6", 0.5);
-        params.ctx.globalAlpha = 0.3;
-        params.ctx.lineWidth   = params.tickWidth;
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = alpha;
+        ctx.lineWidth   = params.tickWidth;
 
         for (ix = params.dialTick * 1.5, ixLen = params.dialTick * 3.5; ix < ixLen; ix += 2) {
             rate = ix / params.dialTick;
@@ -732,28 +711,17 @@ var DomainChart = (function() {
             ex   = common.Util.getPosXOnCircle(params.x, rate, params.innerRadius);
             ey   = common.Util.getPosYOnCircle(params.y, rate, params.innerRadius);
 
-            // 테두리
-            // params.ctx.save();
-            // params.ctx.lineWidth = params.tickWidth;
-            // params.ctx.strokeStyle = common.Util.getRGBA("#41a5f6", 0.5);
-            // params.ctx.beginPath();
-            // params.ctx.moveTo(sx, sy);
-            // params.ctx.lineTo(ex, ey);
-            // params.ctx.stroke();
-            // params.ctx.closePath();
-            // params.ctx.restore();
-
-            params.ctx.beginPath();
-            params.ctx.moveTo(sx, sy);
-            params.ctx.lineTo(ex, ey);
-            params.ctx.stroke();
-            params.ctx.closePath();
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(ex, ey);
+            ctx.stroke();
+            ctx.closePath();
         }
-        params.ctx.restore();
+        ctx.restore();
     };
 
     DomainChart.prototype.drawMainCircle = function (x, y, cx, cy, img, timer) {
-        if (!mainImgLoaded) {
+        if (!this.mainImgLoaded) {
             if (timer) {
                 clearTimeout(timer);
             }
@@ -766,9 +734,6 @@ var DomainChart = (function() {
             img, 0, 0, imgPt.mainCircle.x, imgPt.mainCircle.y,
             x, y, imgPt.mainCircle.x, imgPt.mainCircle.y
         );
-
-        // Dial Ticks
-        // this.drawDial(ctxDial, cx, cy, mainOuterRadius, mainInnerRadius, mainTickWidth, mainDialTick);
 
         if (timer) {
             clearTimeout(timer);
@@ -786,25 +751,26 @@ var DomainChart = (function() {
 
         if (data.tps >= 1000) {
             data.tps = data.tps.toFixed(0);
+
             text = common.Util.getCommaFormat(data.tps);
             ctxData.font = common.Util.getFontSize(30);
             ctxData.fillText(text, x + 3 - common.Util.getTextWidth(text, ctxData) / 2, y - 135);
+
         } else {
             data.tps = data.tps.toFixed(1);
+
             text = common.Util.getCommaFormat(data.tps);
             ctxData.font = common.Util.getFontSize(40);
             ctxData.fillText(text, x + 3 - common.Util.getTextWidth(text, ctxData) / 2, y - 130);
+
         }
         ctxData.closePath();
 
         text = 'TPS';
-        ctxData.save();
+        ctxData.font = common.Util.getFontSize(16);
         ctxData.beginPath();
-        ctxData.font = "bold " + common.Util.getFontSize(16);
-        ctxData.fillStyle = common.Util.getColor("BLACK");
         ctxData.fillText(text, x + 3 - common.Util.getTextWidth(text, ctxData) / 2, y - 110);
         ctxData.closePath();
-        ctxData.restore();
 
         // Elapse Time
         text = "Elapse Time(sec)";
@@ -850,7 +816,7 @@ var DomainChart = (function() {
         //TODO ------------- 삭제 --------------
 
         ctxTask.fillStyle = common.Util.getColor("LABEL");
-        ctxTask.font = "700 " + common.Util.getFontSize(10.5);
+        ctxTask.font = common.Util.getFontSize(14);
 
         // Label
         ctxTask.save();
@@ -906,15 +872,15 @@ var DomainChart = (function() {
 
         params.ctx.beginPath();
         params.ctx.moveTo(posX, posY);
-        params.ctx.lineTo(posX, posY - 10);
+        params.ctx.lineTo(posX, posY - 20);
         params.ctx.stroke();
         params.ctx.closePath();
 
         params.ctx.lineJoin = "round";
         newPosX = common.Util.getPosXOnCircle(posX, 1.1, 20);
-        newPosY = common.Util.getPosYOnCircle(posY - 10, 1.1, 20);
+        newPosY = common.Util.getPosYOnCircle(posY - 20, 1.1, 20);
         params.ctx.beginPath();
-        params.ctx.moveTo(posX, posY - 10);
+        params.ctx.moveTo(posX, posY - 20);
         params.ctx.lineTo(newPosX, newPosY);
         params.ctx.stroke();
         params.ctx.closePath();
@@ -940,7 +906,7 @@ var DomainChart = (function() {
     };
 
     DomainChart.prototype.drawSubCircle = function (x, y, cx, cy, img, timer) {
-        if (!subImgLoaded) {
+        if (!this.subImgLoaded) {
             if (timer) {
                 clearTimeout(timer);
             }
@@ -953,9 +919,6 @@ var DomainChart = (function() {
             img, 0, 0, imgPt.subCircle.x, imgPt.subCircle.y,
             x, y, imgPt.subCircle.x, imgPt.subCircle.y
         );
-
-        // Dial Ticks
-        // this.drawDial(ctxDial, cx, cy, subOuterRadius, subInnerRadius, subTickWidth, subDialTick);
 
         if (timer) {
             clearTimeout(timer);
@@ -971,30 +934,24 @@ var DomainChart = (function() {
 
         if (data.tps >= 1000) {
             data.tps = data.tps.toFixed(0);
+
             text = common.Util.getCommaFormat(data.tps);
-
             ctxData.font = common.Util.getFontSize(20);
-            ctxData.beginPath();
             ctxData.fillText(text, x + 20 - common.Util.getTextWidth(text, ctxData), y - 38);
-            ctxData.closePath();
 
+            text = "TPS";
             ctxData.font = common.Util.getFontSize(12);
-            ctxData.beginPath();
-            ctxData.fillText("TPS", x + 26, y - 38);
-            ctxData.closePath();
+            ctxData.fillText(text, x + 26, y - 38);
         } else {
             data.tps = data.tps.toFixed(1);
+
             text = common.Util.getCommaFormat(data.tps);
-
             ctxData.font = common.Util.getFontSize(25);
-            ctxData.beginPath();
             ctxData.fillText(text, x + 20 - common.Util.getTextWidth(text, ctxData), y - 35);
-            ctxData.closePath();
 
+            text = "TPS";
             ctxData.font = common.Util.getFontSize(12);
-            ctxData.beginPath();
-            ctxData.fillText("TPS", x + 26, y - 38);
-            ctxData.closePath();
+            ctxData.fillText(text, x + 26, y - 38);
         }
 
         // Elapse Time
@@ -1199,18 +1156,17 @@ var DomainChart = (function() {
         this.drawTPSChart(ctxChartRight, data.main.tps, chartDataRight);
     };
 
+    /**
+     * 들어온 데이터를 가지고 다이얼 애니메이션을 초기화하고 실행하는 부분
+     * iniDialParams에서 주기마다 들어온 데이터를 가지고 다이얼 애니메이션을 그리는데 필요한 변수를 담은 dialParams를 다시 초기화한다.
+     * TPSPrevious와 TPSCurrent의 값의 비교를 해서 정방향으로 다이얼을 채워나가는 애니메이션인지, 역방향으로 다이얼을 지워나가는 애니메이션인지 결정해서 호출한다.
+     */
     DomainChart.prototype.startAnimation = function() {
         var ix, idx, timer, params;
 
         clearTimeout(lDialTimer[0]);
         clearTimeout(mDialTimer[0]);
         clearTimeout(rDialTimer[0]);
-
-        // ctxDial.clearRect(0, 0, this.getWidth(), this.getHeight());
-
-        // for (ix in dialParams) {
-        //     this.drawDial(dialParams[ix].draw);
-        // }
 
         // init params
         this.initDialParams();
@@ -1221,14 +1177,11 @@ var DomainChart = (function() {
             params = dialParams[ix].animation;
 
                 if (firstInit) {
-                    // timer[0] = setTimeout(this.dialAnimation.bind(this, params, params.TPSCur, params.TPSPrev, idx), 0);
                     timer[0] = requestAnimationFrame(this.dialAnimation.bind(this, params, params.TPSCur, params.TPSPrev, idx));
                 } else {
                     if (params.TPSPrev > params.TPSCur) {
-                        // timer[0] = setTimeout(this.dialRevAnimation.bind(this, params, params.TPSPrev, params.TPSCur, idx), 0);
                         timer[0] = requestAnimationFrame(this.dialRevAnimation.bind(this, params, params.TPSPrev, params.TPSCur, idx));
                     } else if (params.TPSCur > params.TPSPrev) {
-                        // timer[0] = setTimeout(this.dialAnimation.bind(this, params, params.TPSPrev, params.TPSCur, idx), 0);
                         timer[0] = requestAnimationFrame(this.dialAnimation.bind(this, params, params.TPSPrev, params.TPSCur, idx));
                     }
                 }
@@ -1238,6 +1191,16 @@ var DomainChart = (function() {
 
         firstInit = false;
 
+
+
+
+        // if (this.switchs) {
+        //     canvasDialBlink.style.visibility = "hidden";
+        // } else {
+        //     canvasDialBlink.style.visibility = "visible";
+        // }
+        //
+        // this.switchs = !this.switchs;
     };
 
     return DomainChart;

@@ -380,7 +380,9 @@ var canvasCpuChart = (function () {
         ctxBack.fillStyle = this.fontColor;
         ctxBack.aling = 'center';
         ctxBack.font = '20px Helvetica';
-        ctxBack.fillText(this.title, ((width / 2) - (titleWidth / 2)) - 8, height + 15);
+        if (type !== -1) {
+            ctxBack.fillText(this.title, ((width / 2) - (titleWidth / 2)) - 8, height + 15);
+        }
         ctxBack.restore();
         ctxBack.font = '12px Roboto Condensed';
         ctxBack.fillStyle = this.fontColor;

@@ -313,7 +313,7 @@ Ext.define('RTM.EED.rtmInsTaskAlarm', {
         };
 
         var parserData = sapmleData.data;
-        for (var ix = 0 ; ix < 20; ix++) {
+        for (var ix = 0 ; ix < 15; ix++) {
             var dataIns =  {
                 "instance" : 'TaskTest' + ix,
                 "A1" : Math.floor(Math.random() * 3) ,

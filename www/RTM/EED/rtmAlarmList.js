@@ -191,7 +191,10 @@ Ext.define('RTM.EED.rtmAlarmList', {
         }, {
             xtype: 'tbfill',
             flex: 1
-        }, this.optionButton);
+        }, {
+            xtype: 'tbfill',
+            flex: 1
+        });
         this.baseBodyContainer.add(this.gridArea);
         //
         // this.addContextMenu();

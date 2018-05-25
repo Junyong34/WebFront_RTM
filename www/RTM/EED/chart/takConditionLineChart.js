@@ -13,6 +13,7 @@ Ext.define('RTM.EED.chart.takConditionLineChart', {
 
         this.totalPoints = 20;
         this.updateInterval = 3000;
+        this.Interval = 3000;
         this.now = new Date().getTime();
         this.options = null;
         this.data = [];
@@ -52,21 +53,23 @@ Ext.define('RTM.EED.chart.takConditionLineChart', {
         this.draw();
     },
     initData: function () {
-        for ( let i = 0; i <this.dataStorage.length; i++) {
-            let datasetting = this.dataStorage[i];
-            // 초기 값 셋팅
-            for (var ix = 0; ix < this.totalPoints; ix++) {
-                if(this.totalPoints - 1 === ix){
-                    datasetting.data[this.totalPoints - 1] = [this.now, 0];
-                } else if (ix !== 0)  {
-                    datasetting.data[ix] = [datasetting.data[datasetting.data.length -1][0] - this.updateInterval, null];
+        let start, now;
+
+        start = this.totalPoints;
+        now   = this.now;
+
+        for (let ix = 0, ixLen = this.dataStorage.length; ix < ixLen; ix++) {
+            let datasetting = this.dataStorage[ix].data;
+
+            for (let jx = 0, jxLen = start; jx < jxLen; jx++) {
+                if (jx === 0) {
+                    datasetting[jx] = [now, null];
                 } else {
-                    // 초기값 0으로 셋팅
-                    datasetting.data[ix] = [this.now, null];
-
-
+                    datasetting[jx] = [datasetting[jx - 1][0] + this.Interval, null];
                 }
             }
+
+            datasetting[datasetting.length - 1][1] = 0;
         }
     },
     getData: function () {
@@ -174,9 +177,10 @@ Ext.define('RTM.EED.chart.takConditionLineChart', {
             self.getData();
 
             $.plot($("#" + self.id), self.dataset, self.options);
-            setTimeout(update, self.updateInterval);
+            setTimeout(update, self.Interval);
         }
-        update();
+
+        setTimeout(update, self.Interval);
         // setTimeout(update, self.updateInterval);
     }
 })

@@ -13,6 +13,7 @@ Ext.define('RTM.EED.chart.cpuLineChart', {
 
         this.totalPoints = 20;
         this.updateInterval = 3000;
+        this.Interval = 3000;
         this.now = new Date().getTime();
         // console.log(this.now);
         this.data = [];
@@ -31,44 +32,28 @@ Ext.define('RTM.EED.chart.cpuLineChart', {
         this.draw();
     },
     initData: function () {
+        var ix, ixLen, start;
 
         // 초기 값 셋팅
-        for (var ix = 0; ix < this.totalPoints; ix++) {
-            if (ix !== 0) {
-                this.data[ix] = [this.data[this.data.length - 1][0] - this.updateInterval, null];
-                this.data2[ix] = [this.data2[this.data2.length - 1][0] - this.updateInterval, null];
-                this.data3[ix] = [this.data3[this.data3.length - 1][0] - this.updateInterval, null];
-                // this.data[ix] = [null, null];
-                // this.data2[ix] = [null, null];
-                // this.data3[ix] = [null, null];
-            } else {
-                // 초기값 0으로 셋팅
-                this.data[ix] = [this.now, null];
-                this.data2[ix] = [this.now, null];
-                this.data3[ix] = [this.now, null];
+        start = this.totalPoints;
 
+        for (ix = 0, ixLen = start; ix < ixLen; ix++) {
+            if (ix === 0) {
+                this.data[ix] = [this.now - start * this.updateInterval, null];
+                this.data2[ix] = [this.now - start * this.updateInterval, null];
+                this.data3[ix] = [this.now - start * this.updateInterval, null];
+            } else {
+                this.data[ix] = [this.data[ix - 1][0] + this.updateInterval, null];
+                this.data2[ix] = [this.data2[ix - 1][0] + this.updateInterval, null];
+                this.data3[ix] = [this.data3[ix - 1][0] + this.updateInterval, null];
             }
         }
-        this.data[this.totalPoints - 1] = [this.now, 0];
-        this.data2[this.totalPoints - 1] = [this.now, 0];
-        this.data3[this.totalPoints - 1] = [this.now, 0];
 
-        // if (!this.data.length) {
-        //     this.data[0] = [this.now, Math.random() * 100];
-        // }
-
-
-        // while (this.data.length < this.totalPoints) {
-        //     var y = Math.random() * 100;
-        //     // var temp = [this.now += this.updateInterval, y];
-        //     var temp = [this.data[this.data.length - 1][0] + this.updateInterval, y];
-        //     this.data.push(temp);
-        // }
     },
     getData: function () {
-        var y = Math.random() * 100;
+        var x = Math.random() * 100;
         this.data.shift();
-        this.data.push([this.data[this.data.length - 1][0] + this.updateInterval, y]);
+        this.data.push([this.data[this.data.length - 1][0] + this.updateInterval, x]);
 
         var x = Math.random() * 50;
         this.data2.shift();
@@ -78,6 +63,7 @@ Ext.define('RTM.EED.chart.cpuLineChart', {
         this.data3.shift();
         this.data3.push([this.data3[this.data3.length - 1][0] + this.updateInterval, x]);
 
+        console.log(this.data);
         // if (!this.data.length) {
         //     this.data[0] = [this.now, Math.random() * 100];
         // }
@@ -123,13 +109,13 @@ Ext.define('RTM.EED.chart.cpuLineChart', {
                 tickSize: [6, "second"],
                 tickFormatter: function (v, axis) {
                     var date = new Date(v);
-                    if (date.getSeconds() % 3 == 0) {
+                    if (date.getSeconds() % 30 == 0) {
                         var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
                         var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
                         var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
 
                         // return hours + ":" + minutes + ":" + seconds;
-                        return hours + ":" + minutes + ":" + seconds;;
+                        return hours + ":" + minutes + ":" + seconds;
                     } else {
                         return "";
                     }
@@ -186,9 +172,9 @@ Ext.define('RTM.EED.chart.cpuLineChart', {
             self.getData();
 
             $.plot($("#" + self.id), self.dataset, self.options);
-            setTimeout(update, self.updateInterval);
+            setTimeout(update, self.Interval);
         }
-
-        setTimeout(update, self.updateInterval);
+        update();
+        // setTimeout(update, self.Interval);
     }
 })

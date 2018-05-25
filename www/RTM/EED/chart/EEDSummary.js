@@ -36,7 +36,8 @@ var EEDSummary = (function() {
             ctxAVG        : null,
             ctxRunning    : null,
             ctxError      : null,
-            ctxFillStyle  : '#ABAEB5'
+            // ctxFillStyle  : '#ABAEB5'
+            ctxFillStyle  : '#E7E7E7'
         };
 
         var ix;
